@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 
 class TypeStorageModel(models.Model):
-    type_storage =  models.CharField('Тип накопителя', max_length=50)
+    type_storage = models.CharField('Тип накопителя', max_length=50)
 
     def __str__(self):
         return self.type_storage
@@ -16,11 +16,11 @@ class StorageModel(models.Model):
     model = models.CharField('Модель накопителя', max_length=50)
     inv = models.CharField('Инв. №', max_length=50)
     size_storage = models.PositiveSmallIntegerField('Объём накопителя в гигабайтах',)
-    type_storage = models.ManyToManyField(TypeStorageModel, verbose_name='Тип накопителя')
-    date_install = models.DateField('Дата установки')
+    type_storage = models.ForeignKey(TypeStorageModel, on_delete=models.CASCADE, verbose_name='Тип накопителя')
+    date_install = models.DateField('Дата установки', null=True, blank=True)
 
     def __str__(self):
-        return {self.model - self.type_storage - self.size_storage}
+        return f"{self.model} - {self.size_storage}"
 
     class Meta:
         verbose_name = 'Накопитель'
@@ -38,7 +38,7 @@ class HostModel(models.Model):
     date_create = models.DateTimeField('Дата создания', auto_now=True, blank=True)
 
     def __str__(self):
-        return {self.name - self.ip}
+        return f"{self.name} - {self.ip}"
 
     class Meta:
         verbose_name = 'Хост'
@@ -46,6 +46,7 @@ class HostModel(models.Model):
 
 class VirtualModel(models.Model):
     name = models.CharField('Название виртуального сервера', max_length=50)
+    host = models.ForeignKey(HostModel, verbose_name='На каком хосте размещен', on_delete=models.CASCADE)
     ip = models.CharField('IP адрес виртуального сервера', max_length=15)
     description = models.CharField('Описание виртуального сервера', max_length=500)
     cores = models.PositiveSmallIntegerField('Колличество ядер')
@@ -56,7 +57,7 @@ class VirtualModel(models.Model):
     date_create = models.DateTimeField('Дата создания', auto_now=True, blank=True)
 
     def __str__(self):
-        return {self.name - self.ip}
+        return f"{self.name} - {self.ip}"
 
     class Meta:
         verbose_name = 'Виртуальный сервер'
