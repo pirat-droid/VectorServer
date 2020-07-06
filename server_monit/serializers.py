@@ -1,15 +1,68 @@
-from .models import TypeStorageModel, StorageModel, HostModel, VirtualModel
+from .models import (TypeStorageModel,
+                     StorageModel,
+                     HostModel,
+                     VirtualModel,
+                     OSModel,)
 from rest_framework import serializers
+
 
 class ListHostSerializer(serializers.ModelSerializer):
     """Сериализаия списка хостов"""
+    os = serializers.CharField(source='os.__str__')
+
     class Meta:
         model = HostModel
-        fields = ['name', 'ip', 'os']
+        fields = ('id',
+                  'name',
+                  'ip',
+                  'os',)
 
 
-class listVirtualSerializer(serializers.ModelSerializer):
+class ListVirtualSerializer(serializers.ModelSerializer):
     """Сериализация списка виртуалок"""
+    os = serializers.CharField(source='os.__str__')
+    host = serializers.CharField(source='host.name')
+
     class Meta:
-        models = VirtualModel
-        fields = ['name', 'ip', 'host', 'os']
+        model = VirtualModel
+        fields = ('name',
+                  'ip',
+                  'host',
+                  'os',)
+
+
+class ListStorageSerializer(serializers.ModelSerializer):
+    """Сериализация списка накопителей"""
+    type_storage = serializers.CharField(source='type_storage.type_storage')
+
+    class Meta:
+        model = StorageModel
+        exclude = ['user', 'date_create']
+
+
+class AddStorageSerializer(serializers.ModelSerializer):
+    """Сериализация добавления накопителя"""
+    date_create = serializers.DateTimeField(format="%d-%m-%Y %H:%M:%S", required=False, read_only=True)
+
+    class Meta:
+        model = StorageModel
+        fields = '__all__'
+
+
+class ListOSSerializer(serializers.ModelSerializer):
+    """Сериализация спска операционных систем"""
+    family = serializers.CharField(source='family.name')
+    capacity = serializers.CharField(source='capacity.bit')
+
+    class Meta:
+        model = OSModel
+        exclude = ['user', 'date_create']
+
+
+class AddOSSerializer(serializers.ModelSerializer):
+    """Сериализация добавление операционной системы"""
+    date_create = serializers.DateTimeField(format="%d-%m-%Y %H:%M:%S", required=False, read_only=True)
+
+    class Meta:
+        model = OSModel
+        fields = '__all__'
