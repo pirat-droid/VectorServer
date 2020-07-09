@@ -18,6 +18,23 @@ class ListHostSerializer(serializers.ModelSerializer):
                   'os',)
 
 
+class DetailHostSerializer(serializers.ModelSerializer):
+    """Сериализатор детального описания хоста"""
+
+    class Meta:
+        model = HostModel
+        exclude = ['user', 'date_create']
+
+
+class AddHostSerializer(serializers.ModelSerializer):
+    """Сериализация добавления хоста"""
+    date_create = serializers.DateTimeField(format="%d-%m-%Y %H:%M:%S", required=False, read_only=True)
+
+    class Meta:
+        model = HostModel
+        fields = '__all__'
+
+
 class ListVirtualSerializer(serializers.ModelSerializer):
     """Сериализация списка виртуалок"""
     os = serializers.CharField(source='os.__str__')
@@ -29,6 +46,23 @@ class ListVirtualSerializer(serializers.ModelSerializer):
                   'ip',
                   'host',
                   'os',)
+
+
+class DetailVirtualSerializer(serializers.ModelSerializer):
+    """Сериализатор детального описания виртуальной машины"""
+
+    class Meta:
+        model = VirtualModel
+        exclude = ['user', 'date_create']
+
+
+class AddVirtualSerializer(serializers.ModelSerializer):
+    """Сериализация добавления виртуальной машины"""
+    date_create = serializers.DateTimeField(format="%d-%m-%Y %H:%M:%S", required=False, read_only=True)
+
+    class Meta:
+        model = VirtualModel
+        fields = '__all__'
 
 
 class ListStorageSerializer(serializers.ModelSerializer):

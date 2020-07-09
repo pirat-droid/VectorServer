@@ -77,7 +77,7 @@ class FamilyOSAdmin(admin.ModelAdmin):
 
 @admin.register(OSModel)
 class OSAdmin(admin.ModelAdmin):
-    list_display = ('family', 'os', 'capacity')
+    list_display = ('family', 'os', 'capacity', 'date_create')
     list_filter = ('family', 'capacity')
     search_fields = ('os',)
 
