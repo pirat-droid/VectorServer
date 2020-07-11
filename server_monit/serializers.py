@@ -18,12 +18,47 @@ class ListHostSerializer(serializers.ModelSerializer):
                   'os',)
 
 
+class ListStorageSerializer(serializers.ModelSerializer):
+    """Сериализация списка накопителей"""
+    type_storage = serializers.CharField(source='type_storage.type_storage')
+
+    class Meta:
+        model = StorageModel
+        exclude = ['user', 'date_create']
+
+
+class ListVirtualInHostSerializer(serializers.ModelSerializer):
+    """Сериализация списка виртуальных машин в хосте"""
+    os = serializers.CharField(source='os.__str__')
+
+    class Meta:
+        model = VirtualModel
+        fields = ('id',
+                  'name',
+                  'ip',
+                  'os',
+                  'description',)
+
+
 class DetailHostSerializer(serializers.ModelSerializer):
     """Сериализатор детального описания хоста"""
+    storage = ListStorageSerializer(read_only=True, many=True)
+    os = serializers.CharField(source='os.__str__')
+    # virtuals = serializers.StringRelatedField(many=True)
+    virtuals = ListVirtualInHostSerializer(read_only=True, many=True)
 
     class Meta:
         model = HostModel
-        exclude = ['user', 'date_create']
+        fields = ['name',
+                  'os',
+                  'virtuals',
+                  'storage',
+                  'ip',
+                  'description',
+                  'cpu',
+                  'memory',
+                  'inv',
+                  ]
 
 
 class AddHostSerializer(serializers.ModelSerializer):
@@ -50,6 +85,8 @@ class ListVirtualSerializer(serializers.ModelSerializer):
 
 class DetailVirtualSerializer(serializers.ModelSerializer):
     """Сериализатор детального описания виртуальной машины"""
+    os = serializers.CharField(source='os.__str__')
+    host = serializers.CharField(source='host.name')
 
     class Meta:
         model = VirtualModel
@@ -63,15 +100,6 @@ class AddVirtualSerializer(serializers.ModelSerializer):
     class Meta:
         model = VirtualModel
         fields = '__all__'
-
-
-class ListStorageSerializer(serializers.ModelSerializer):
-    """Сериализация списка накопителей"""
-    type_storage = serializers.CharField(source='type_storage.type_storage')
-
-    class Meta:
-        model = StorageModel
-        exclude = ['user', 'date_create']
 
 
 class AddStorageSerializer(serializers.ModelSerializer):

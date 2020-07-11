@@ -80,6 +80,7 @@ class HostModel(models.Model):
     ip = models.CharField('IP адрес хоста', max_length=15)
     description = models.CharField('Описание хоста', max_length=500)
     cpu = models.CharField('Процессор', max_length=50)
+    inv = models.CharField('Инвентарный номер',max_length=50, default='-')
     memory = models.PositiveSmallIntegerField('Объём оперативной памяти в гигабайтах')
     storage = models.ManyToManyField(StorageModel, verbose_name='Накопители')
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
@@ -95,7 +96,7 @@ class HostModel(models.Model):
 
 class VirtualModel(models.Model):
     name = models.CharField('Название виртуального сервера', max_length=50)
-    host = models.ForeignKey(HostModel, verbose_name='На каком хосте размещен', on_delete=models.CASCADE)
+    host = models.ForeignKey(HostModel, verbose_name='На каком хосте размещен', on_delete=models.CASCADE, related_name='virtuals')
     ip = models.CharField('IP адрес виртуального сервера', max_length=15)
     os = models.ForeignKey(OSModel, on_delete=models.CASCADE, verbose_name='Операционная система')
     description = models.CharField('Описание виртуального сервера', max_length=500)

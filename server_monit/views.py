@@ -197,6 +197,9 @@ class StorageListView(APIView):
         return Response(serializer.data)
 
 
+# class StorageDetail
+
+
 class StorageAddView(APIView):
     """Добавление накопителя"""
 
