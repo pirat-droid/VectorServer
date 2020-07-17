@@ -16,7 +16,12 @@ from .serializers import (ListHostSerializer,
                           AddHostSerializer,
                           AddVirtualSerializer,
                           DetailHostSerializer,
-                          DetailVirtualSerializer, )
+                          DetailVirtualSerializer,
+                          ListTypeStorageSerializer,
+                          ListHostStorageSerializer,
+                          ListFamilySerializer,
+                          ListCapacitySerializer,
+                          ListSelectHostSerializer)
 from django.http import Http404
 from rest_framework import status
 from rest_framework.views import APIView
@@ -24,6 +29,7 @@ from rest_framework.response import Response
 
 from django.shortcuts import render
 import sqlite3
+
 
 def list(request):
     conn = sqlite3.connect('db.sqlite3')
@@ -69,7 +75,7 @@ class HostAddView(APIView):
     def post(self, request):
         serializer = AddHostSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(user=self.request.user)
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -169,7 +175,7 @@ class VirtualAddView(APIView):
     def post(self, request):
         serializer = AddVirtualSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(user=self.request.user)
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -186,7 +192,7 @@ class VirtualDeleteView(APIView):
     def delete(self, request, pk):
         delete = self.get_object(pk)
         delete.delete()
-        return Response(status=status.HTTP_204_NO_CONTENTS)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class StorageListView(APIView):
     """Вывод списка накопителей"""
@@ -197,39 +203,69 @@ class StorageListView(APIView):
         return Response(serializer.data)
 
 
-# class StorageDetail
-
-
 class StorageAddView(APIView):
     """Добавление накопителя"""
 
     def post(self, request):
         serializer = AddStorageSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(user=self.request.user)
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class StorageEditView(APIView):
+    """Изменение накопителя"""
+
+    def get_object(self, pk):
+        try:
+            return StorageModel.objects.get(pk=pk)
+        except StorageModel.DoesNotExist:
+            raise Http404
+
+    def put(self, request, pk):
+        edit = self.get_object(pk)
+        serializer = AddStorageSerializer(edit, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class StorageDeleteView(APIView):
+    """Удаление накопителя"""
+
+    def get_object(self, pk):
+        try:
+            return StorageModel.objects.get(pk=pk)
+        except StorageModel.DoesNotExist:
+            raise Http404
+
+    def delete(self, request, pk):
+        delete = self.get_object(pk)
+        delete.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class OSListView(APIView):
     """Вывод списка операционных систем"""
 
     def get(self, request):
-        conn = sqlite3.connect('db.sqlite3')
-        cursor = conn.cursor()
-        sql = 'SELECT id FROM server_monit_osmodel ORDER BY id DESC LIMIT 1'
-        cursor.execute(sql)
-        sql = cursor.fetchall()
-        id = sql[0]
-        id = int(id[0]) + 1
-        sql = "INSERT INTO server_monit_osmodel VALUES (" + str(id) + ", 'script', 1, 3, datetime('now'), 1)"
-        cursor.execute(sql)
+        # conn = sqlite3.connect('db.sqlite3')
+        # cursor = conn.cursor()
+        # sql = 'SELECT id FROM server_monit_osmodel ORDER BY id DESC LIMIT 1'
+        # cursor.execute(sql)
         # sql = cursor.fetchall()
-        sql = 'SELECT * FROM server_monit_osmodel'
-        cursor.execute(sql)
-        conn.commit()
-        sql = cursor.fetchall()
-        conn.close()
+        # id = sql[0]
+        # id = int(id[0]) + 1
+        # sql = "INSERT INTO server_monit_osmodel VALUES (" + str(id) + ", 'script', 1, 3, datetime('now'), 1)"
+        # cursor.execute(sql)
+        # # sql = cursor.fetchall()
+        # sql = 'SELECT * FROM server_monit_osmodel'
+        # cursor.execute(sql)
+        # conn.commit()
+        # sql = cursor.fetchall()
+        # conn.close()
 
         list = OSModel.objects.all()
         serializer = ListOSSerializer(list, many=True)
@@ -242,11 +278,84 @@ class OSAddView(APIView):
     def post(self, request):
         serializer = AddOSSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(user=self.request.user)
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-"""
-Добавить вывод виртуальных машин по хосту
-"""
+class OSEditView(APIView):
+    """Изменение операционной системы"""
+
+    def get_object(self, pk):
+        try:
+            return OSModel.objects.get(pk=pk)
+        except OSModel.DoesNotExist:
+            raise Http404
+
+    def put(self, request, pk):
+        edit = self.get_object(pk)
+        serializer = AddOSSerializer(edit, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class OSDeleteView(APIView):
+    """Удаление операционной системы"""
+
+    def get_object(self, pk):
+        try:
+            return OSModel.objects.get(pk=pk)
+        except OSModel.DoesNotExist:
+            raise Http404
+
+    def delete(self, request, pk):
+        delete = self.get_object(pk)
+        delete.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class TypeStorageListView(APIView):
+    """Вывод списка типов накопителей"""
+
+    def get(self, request):
+        list = TypeStorageModel.objects.all()
+        serializer = ListTypeStorageSerializer(list, many=True)
+        return Response(serializer.data)
+
+
+class HostListStorageView(APIView):
+    """Вывод списка хостов при добавлении или изменении информации о накопителе"""
+
+    def get(self, request):
+        list = HostModel.objects.all()
+        serializer = ListHostStorageSerializer(list, many=True)
+        return Response(serializer.data)
+
+
+class FamilyListView(APIView):
+    """Вывод списка семейства ос"""
+
+    def get(self, request):
+        list = FamilyOSModel.objects.all()
+        serializer = ListFamilySerializer(list, many=True)
+        return  Response(serializer.data)
+
+
+class CapacityListView(APIView):
+    """Вывод списка разрядности ос"""
+
+    def get(self, request):
+        list = CapacityModel.objects.all()
+        serializer = ListCapacitySerializer(list, many=True)
+        return Response(serializer.data)
+
+
+class HostSelectView(APIView):
+    """Вывод списка имени хостов"""
+
+    def get(self, request):
+        list = HostModel.objects.all()
+        serializer = ListSelectHostSerializer(list, many=True)
+        return Response(serializer.data)

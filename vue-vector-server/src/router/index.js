@@ -1,62 +1,41 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
-import ListVM from "../views/ListVM";
-import ListStorage from "../views/ListStorage";
-import ListOS from "../views/ListOS";
-import Host from "../views/Host";
-import VM from "../views/VM";
-import Storage from "../views/Storage";
+import Host from "../components/Host";
+import Virtual from "../components/Virtual";
+import Storage from "../components/Storage";
+import OperatingSystem from "../components/OperatingSystem";
+import DetailHost from "../components/DetailHost";
+
 
 Vue.use(VueRouter)
 
 const routes = [
     {
         path: '/',
-        name: 'Home',
-        component: Home
+        name: 'Host',
+        component: Host,
     },
     {
         path: '/list-vm',
-        name: 'ListVM',
-        component: ListVM,
-    },
-    {
-        path: '/storage/:id',
-        name: 'Storage',
-        component: Storage,
-        props: true,
-    },
-    {
-        path: '/vm/:id',
-        name: 'VM',
-        component: VM,
-        props: true,
-    },
-    {
-        path: '/host/:id',
-        name: 'Host',
-        component: Host,
-        props: true,
+        name: 'Virtual',
+        component: Virtual,
     },
     {
         path: '/list-storage',
-        name: 'ListStorage',
-        component: ListStorage,
+        name: 'Storage',
+        component: Storage,
     },
     {
-        path: '/list-os',
-        name: 'ListOS',
-        component: ListOS,
+        path: '/list-operating-system',
+        name: 'OperatingSystem',
+        component: OperatingSystem,
     },
     {
-        path: '/about',
-        name: 'About',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-    }
+        path: '/:id',
+        name: 'DetailHost',
+        component: DetailHost,
+        props: true,
+    },
 ]
 
 const router = new VueRouter({

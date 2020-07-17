@@ -2,29 +2,27 @@ from .models import (TypeStorageModel,
                      StorageModel,
                      HostModel,
                      VirtualModel,
-                     OSModel,)
+                     OSModel,
+                     FamilyOSModel,
+                     CapacityModel,)
 from rest_framework import serializers
-
-
-class ListHostSerializer(serializers.ModelSerializer):
-    """Сериализаия списка хостов"""
-    os = serializers.CharField(source='os.__str__')
-
-    class Meta:
-        model = HostModel
-        fields = ('id',
-                  'name',
-                  'ip',
-                  'os',)
 
 
 class ListStorageSerializer(serializers.ModelSerializer):
     """Сериализация списка накопителей"""
     type_storage = serializers.CharField(source='type_storage.type_storage')
+    # host = serializers.CharField(source='host.name')
 
     class Meta:
         model = StorageModel
-        exclude = ['user', 'date_create']
+        fields = ['id',
+                  'model',
+                  'inv',
+                  'size_storage',
+                  'type_storage',
+                  'date_install',
+                  'description',
+                  'host']
 
 
 class ListVirtualInHostSerializer(serializers.ModelSerializer):
@@ -40,6 +38,38 @@ class ListVirtualInHostSerializer(serializers.ModelSerializer):
                   'description',)
 
 
+class ListHostSerializer(serializers.ModelSerializer):
+    """Сериализаия списка хостов"""
+    storage = ListStorageSerializer(read_only=True, many=True)
+    os = serializers.CharField(source='os.__str__')
+
+    class Meta:
+        model = HostModel
+        fields = ['id',
+                  'name',
+                  'os',
+                  'storage',
+                  'ip',
+                  'description',
+                  'cpu',
+                  'memory',
+                  'inv',
+                  ]
+
+
+class ListSelectHostSerializer(serializers.ModelSerializer):
+    """Сериализаия списка хостов при добавлении или изменении виртуальной машины"""
+    os = serializers.CharField(source='os.__str__')
+
+    class Meta:
+        model = HostModel
+        fields = ['id',
+                  'name',
+                  'os',
+                  'ip',
+                  ]
+
+
 class DetailHostSerializer(serializers.ModelSerializer):
     """Сериализатор детального описания хоста"""
     storage = ListStorageSerializer(read_only=True, many=True)
@@ -49,7 +79,8 @@ class DetailHostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = HostModel
-        fields = ['name',
+        fields = ['id',
+                  'name',
                   'os',
                   'virtuals',
                   'storage',
@@ -63,7 +94,6 @@ class DetailHostSerializer(serializers.ModelSerializer):
 
 class AddHostSerializer(serializers.ModelSerializer):
     """Сериализация добавления хоста"""
-    date_create = serializers.DateTimeField(format="%d-%m-%Y %H:%M:%S", required=False, read_only=True)
 
     class Meta:
         model = HostModel
@@ -77,10 +107,7 @@ class ListVirtualSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = VirtualModel
-        fields = ('name',
-                  'ip',
-                  'host',
-                  'os',)
+        fields = '__all__'
 
 
 class DetailVirtualSerializer(serializers.ModelSerializer):
@@ -95,16 +122,21 @@ class DetailVirtualSerializer(serializers.ModelSerializer):
 
 class AddVirtualSerializer(serializers.ModelSerializer):
     """Сериализация добавления виртуальной машины"""
-    date_create = serializers.DateTimeField(format="%d-%m-%Y %H:%M:%S", required=False, read_only=True)
 
     class Meta:
         model = VirtualModel
         fields = '__all__'
 
 
+class ListTypeStorageSerializer(serializers.ModelSerializer):
+    """Сериализация списка типов накопителей"""
+
+    class Meta:
+        model = TypeStorageModel
+        fields = ['id', 'type_storage']
+
 class AddStorageSerializer(serializers.ModelSerializer):
     """Сериализация добавления накопителя"""
-    date_create = serializers.DateTimeField(format="%d-%m-%Y %H:%M:%S", required=False, read_only=True)
 
     class Meta:
         model = StorageModel
@@ -118,13 +150,37 @@ class ListOSSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OSModel
-        exclude = ['user', 'date_create']
+        fields = '__all__'
+
+
+class ListFamilySerializer(serializers.ModelSerializer):
+    """Сериализация списка семейств ос"""
+
+    class Meta:
+        model = FamilyOSModel
+        fields = '__all__'
+
+
+class ListCapacitySerializer(serializers.ModelSerializer):
+    """Сериализация списка разрядности ос"""
+
+    class Meta:
+        model = CapacityModel
+        fields = '__all__'
 
 
 class AddOSSerializer(serializers.ModelSerializer):
     """Сериализация добавление операционной системы"""
-    date_create = serializers.DateTimeField(format="%d-%m-%Y %H:%M:%S", required=False, read_only=True)
 
     class Meta:
         model = OSModel
         fields = '__all__'
+
+
+class ListHostStorageSerializer(serializers.ModelSerializer):
+    """Сериализация выбора хоста при добавлении или редактировании накопителя !!!!!!!!11"""
+
+    class Meta:
+        model = HostModel
+        fields = ['id',
+                  'name']
