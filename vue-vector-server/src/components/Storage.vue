@@ -1,245 +1,244 @@
 <template>
-    <div class="Storage">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-10">
-                    <p>
-                        <router-link to="/list-vm">List VM</router-link>
-                    </p>
-                    <p>
-                        <router-link to="/">List Hosts</router-link>
-                    </p>
-                    <p>
-                        <router-link to="/list-operating-system">List Operating system</router-link>
-                    </p>
-                    <h1>List Storage</h1>
-                    <hr>
-                    <br><br>
-                    <button type="button" class="btn btn-success btn-sm" v-b-modal.Storage-modal @click="getListHost">
-                        Add
-                        Storage
-                    </button>
-                    <br><br>
-                    <alert :message=message v-if="showMessage"></alert>
-                    <table>
-                        <thead>
-                        <tr>
-                            <th scope="col">Model</th>
-                            <th scope="col">Storage volume</th>
-                            <th scope="col">Storage type</th>
-                            <th scope="col">Inventory number</th>
-                            <th scope="col">host</th>
-                            <th scope="col">Date install</th>
-                            <th scope="col">Description</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr v-for="(Storage, index) in list_storage" :key="index">
-                            <td>{{ Storage.model }}</td>
-                            <td>{{ Storage.size_storage }}</td>
-                            <td>{{ Storage.type_storage }}</td>
-                            <td>{{ Storage.inv }}</td>
-                            <td>{{ Storage.host }}</td>
-                            <td>{{ Storage.date_install }}</td>
-                            <td>{{ Storage.description }}</td>
-                            <td>
-                                <button type="button"
-                                        class="btn btn-warning btn-sm"
-                                        v-b-modal.Storage-update-modal
-                                        @click="editStorage(Storage)">
-                                    Update
-                                </button>
-                                <button type="button"
-                                        class="btn btn-danger btn-sm"
-                                        v-b-modal.Storage-delete-modal
-                                        @click="DeleteStorage(Storage)">
-                                    Delete
-                                </button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+    <section id="intro" class="wrapper style1 fullscreen fade-up">
+        <div class="inner">
+            <div class="Storage">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-10">
+                            <h1>List storages</h1>
+                            <hr>
+                            <br><br>
+                            <button type="button" class="btn btn-success btn-sm" v-b-modal.Storage-modal
+                                    @click="getListHost">
+                                Add
+                                storage
+                            </button>
+                            <br><br>
+                            <alert :message=message v-if="showMessage"></alert>
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th scope="col">Model</th>
+                                    <th scope="col">Storage volume</th>
+                                    <th scope="col">Storage type</th>
+                                    <th scope="col">Inventory number</th>
+                                    <th scope="col">host</th>
+                                    <th scope="col">Date install</th>
+                                    <th scope="col">Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="(Storage, index) in list_storage" :key="index">
+                                    <td>{{ Storage.model }}</td>
+                                    <td>{{ Storage.size_storage }}</td>
+                                    <td>{{ Storage.type_storage }}</td>
+                                    <td>{{ Storage.inv }}</td>
+                                    <td>{{ Storage.host }}</td>
+                                    <td>{{ Storage.date_install }}</td>
+                                    <td>{{ Storage.description }}</td>
+                                    <td>
+                                        <button type="button"
+                                                class="btn btn-warning btn-sm"
+                                                v-b-modal.Storage-update-modal
+                                                @click="editStorage(storage)">
+                                            Update
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button type="button"
+                                                class="btn btn-danger btn-sm"
+                                                v-b-modal.Storage-delete-modal
+                                                @click="DeleteStorage(storage)">
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
+                <b-modal ref="addStorageModal"
+                         id="Storage-modal"
+                         title="Add a new storage"
+                         hide-footer
+                         content-class="shadow">
+                    <b-form @submit="Submit" @reset="Reset" class="w-100">
+                        <b-form-group id="form-model-group"
+                                      label="Model storage:"
+                                      label-for="form-model-input">
+                            <b-form-input id="form-model-input"
+                                          type="text"
+                                          v-model="addStorageForm.model"
+                                          required
+                                          placeholder="Enter model storage">
+                            </b-form-input>
+                        </b-form-group>
+                        <b-form-group id="form-storage-volume-group"
+                                      label="Storage volume:"
+                                      label-for="form-storage volume-input">
+                            <b-form-input id="form-storage-volume-input"
+                                          type="number"
+                                          v-model="addStorageForm.size_storage"
+                                          required
+                                          placeholder="Enter storage volume">
+                            </b-form-input>
+                        </b-form-group>
+                        <b-form-group id="form-type-storage-group"
+                                      label="Type storage:"
+                                      label-for="form-type-storage-input">
+                            <b-form-select v-model="addStorageForm.type_storage">
+                                <b-form-select-option :value="null" disabled>Please select an type storage
+                                </b-form-select-option>
+                                <b-form-select-option v-for="type in list_type" :value="type.id">{{ type.type_storage }}
+                                </b-form-select-option>
+                            </b-form-select>
+                        </b-form-group>
+                        <b-form-group id="form-inv-group"
+                                      label="Inventory number:"
+                                      label-for="nvform-inv-input">
+                            <b-form-input id="form-inv-input"
+                                          type="text"
+                                          v-model="addStorageForm.inv"
+                                          required
+                                          placeholder="Enter inventory number">
+                            </b-form-input>
+                        </b-form-group>
+                        <b-form-group id="form-host-group"
+                                      label="Host:"
+                                      label-for="form-host-input">
+                            <b-form-select v-model="addStorageForm.host">
+                                <b-form-select-option :value="null"
+                                                      disabled>
+                                    Please select an host
+                                </b-form-select-option>
+                                <b-form-select-option v-for="host in list_host"
+                                                      :value="host.id">
+                                    {{ host.name }} - {{ host.os }} - {{ host.ip}}
+                                </b-form-select-option>
+                            </b-form-select>
+                        </b-form-group>
+                        <b-form-group id="form-date-install-group"
+                                      label="Date install:"
+                                      label-for="form-date-install-input">
+                            <b-form-input id="form-date-install-input"
+                                          type="date"
+                                          v-model="addStorageForm.date_install"
+                                          required
+                                          placeholder="Enter date install">
+                            </b-form-input>
+                        </b-form-group>
+                        <b-form-group id="form-description-group"
+                                      label="Description:"
+                                      label-for="form-description-input">
+                            <b-form-input id="form-description-input"
+                                          type="text"
+                                          v-model="addStorageForm.description"
+                                          required
+                                          for="input-valid"
+                                          placeholder="Enter description">
+                            </b-form-input>
+                        </b-form-group>
+                        <b-button type="submit" variant="primary">Submit</b-button>
+                        <b-button type="reset" variant="danger">Reset</b-button>
+                    </b-form>
+                </b-modal>
+                <b-modal ref="deleteStorageModal"
+                         id="Storage-delete-modal"
+                         title="Delete storage"
+                         hide-footer>
+                    <b-form @submit="SubmitDelete" @reset="ResetDelete" class="w-100">
+                        <b-button type="submit" variant="primary">Delete</b-button>
+                        <b-button type="reset" variant="danger">Cancel</b-button>
+                    </b-form>
+                </b-modal>
+                <b-modal ref="editStorageModal"
+                         id="Storage-update-modal"
+                         title="Update a storage"
+                         hide-footer>
+                    <b-form @submit="SubmitUpdate" @reset="ResetUpdate" class="w-100">
+                        <b-form-group id="form-model-edit-group"
+                                      label="Model storage:"
+                                      label-for="form-model-input">
+                            <b-form-input id="form-model-input"
+                                          type="text"
+                                          v-model="editStorageForm.model"
+                                          required
+                                          placeholder="Enter model storage">
+                            </b-form-input>
+                        </b-form-group>
+                        <b-form-group id="form-storage-volume-edit-group"
+                                      label="Storage volume:"
+                                      label-for="form-storage volume-input">
+                            <b-form-input id="form-storage-volume-input"
+                                          type="number"
+                                          v-model="editStorageForm.size_storage"
+                                          required
+                                          placeholder="Enter storage volume">
+                            </b-form-input>
+                        </b-form-group>
+                        <b-form-group id="form-type-storage-edit-group"
+                                      label="Type storage:"
+                                      label-for="form-type-storage-input">
+                            <b-form-select v-model="editStorageForm.type_storage">
+                                <b-form-select-option :value="null" disabled>Please select an type storage
+                                </b-form-select-option>
+                                <b-form-select-option v-for="type in list_type" :value="type.id">{{ type.type_storage }}
+                                </b-form-select-option>
+                            </b-form-select>
+                        </b-form-group>
+                        <b-form-group id="form-inv-edit-group"
+                                      label="Inventory number:"
+                                      label-for="nvform-inv-input">
+                            <b-form-input id="form-inv-input"
+                                          type="text"
+                                          v-model="editStorageForm.inv"
+                                          required
+                                          placeholder="Enter inventory number">
+                            </b-form-input>
+                        </b-form-group>
+                        <b-form-group id="form-host-edit-group"
+                                      label="Host:"
+                                      label-for="form-host-input">
+                            <b-form-select v-model="editStorageForm.host">
+                                <b-form-select-option :value="null"
+                                                      disabled>
+                                    Please select an host
+                                </b-form-select-option>
+                                <b-form-select-option v-for="host in list_host"
+                                                      :value="host.id">
+                                    {{ host.name }} - {{ host.os }} - {{ host.ip}}
+                                </b-form-select-option>
+                            </b-form-select>
+                        </b-form-group>
+                        <b-form-group id="form-date-install-edit-group"
+                                      label="Date install:"
+                                      label-for="form-date-install-input">
+                            <b-form-input id="form-date-install-input"
+                                          type="date"
+                                          v-model="editStorageForm.date_install"
+                                          required
+                                          placeholder="Enter date install">
+                            </b-form-input>
+                        </b-form-group>
+                        <b-form-group id="form-description-edit-group"
+                                      label="Description:"
+                                      label-for="form-description-input">
+                            <b-form-input id="form-description-input"
+                                          type="text"
+                                          v-model="editStorageForm.description"
+                                          required
+                                          for="input-valid"
+                                          placeholder="Enter description">
+                            </b-form-input>
+                        </b-form-group>
+                        <b-button type="submit" variant="primary">Submit</b-button>
+                        <b-button type="reset" variant="danger">Reset</b-button>
+                    </b-form>
+                </b-modal>
             </div>
         </div>
-        <b-modal ref="addStorageModal"
-                 id="Storage-modal"
-                 title="Add a new Storage"
-                 hide-footer>
-            <b-form @submit="Submit" @reset="Reset" class="w-100">
-                <b-form-group id="form-model-group"
-                              label="Model storage:"
-                              label-for="form-model-input">
-                    <b-form-input id="form-model-input"
-                                  type="text"
-                                  v-model="addStorageForm.model"
-                                  required
-                                  placeholder="Enter model storage">
-                    </b-form-input>
-                </b-form-group>
-                <b-form-group id="form-storage-volume-group"
-                              label="Storage volume:"
-                              label-for="form-storage volume-input">
-                    <b-form-input id="form-storage-volume-input"
-                                  type="number"
-                                  v-model="addStorageForm.size_storage"
-                                  required
-                                  placeholder="Enter storage volume">
-                    </b-form-input>
-                </b-form-group>
-                <b-form-group id="form-type-storage-group"
-                              label="Type storage:"
-                              label-for="form-type-storage-input">
-                    <b-form-select v-model="addStorageForm.type_storage">
-                        <b-form-select-option :value="null" disabled>Please select an type storage
-                        </b-form-select-option>
-                        <b-form-select-option v-for="type in list_type" :value="type.id">{{ type.type_storage }}
-                        </b-form-select-option>
-                    </b-form-select>
-                </b-form-group>
-                <b-form-group id="form-inv-group"
-                              label="Inventory number:"
-                              label-for="nvform-inv-input">
-                    <b-form-input id="form-inv-input"
-                                  type="text"
-                                  v-model="addStorageForm.inv"
-                                  required
-                                  placeholder="Enter inventory number">
-                    </b-form-input>
-                </b-form-group>
-                <b-form-group id="form-host-group"
-                              label="Host:"
-                              label-for="form-host-input">
-                    <b-form-select v-model="addStorageForm.host">
-                        <b-form-select-option :value="null"
-                                              disabled>
-                            Please select an host
-                        </b-form-select-option>
-                        <b-form-select-option v-for="host in list_host"
-                                              :value="host.id">
-                            {{ host.name }} - {{ host.os }} - {{ host.ip}}
-                        </b-form-select-option>
-                    </b-form-select>
-                </b-form-group>
-                <b-form-group id="form-date-install-group"
-                              label="Date install:"
-                              label-for="form-date-install-input">
-                    <b-form-input id="form-date-install-input"
-                                  type="date"
-                                  v-model="addStorageForm.date_install"
-                                  required
-                                  placeholder="Enter date install">
-                    </b-form-input>
-                </b-form-group>
-                <b-form-group id="form-description-group"
-                              label="Description:"
-                              label-for="form-description-input">
-                    <b-form-input id="form-description-input"
-                                  type="text"
-                                  v-model="addStorageForm.description"
-                                  required
-                                  for="input-valid"
-                                  placeholder="Enter description">
-                    </b-form-input>
-                </b-form-group>
-                <b-button type="submit" variant="primary">Submit</b-button>
-                <b-button type="reset" variant="danger">Reset</b-button>
-            </b-form>
-        </b-modal>
-        <b-modal ref="deleteStorageModal"
-                 id="Storage-delete-modal"
-                 title="Delete Storage"
-                 hide-footer>
-            <b-form @submit="SubmitDelete" @reset="ResetDelete" class="w-100">
-                <b-button type="submit" variant="primary">Delete</b-button>
-                <b-button type="reset" variant="danger">Cancel</b-button>
-            </b-form>
-        </b-modal>
-        <b-modal ref="editStorageModal"
-                 id="Storage-update-modal"
-                 title="Update a new storage"
-                 hide-footer>
-            <b-form @submit="SubmitUpdate" @reset="ResetUpdate" class="w-100">
-                <b-form-group id="form-model-edit-group"
-                              label="Model storage:"
-                              label-for="form-model-input">
-                    <b-form-input id="form-model-input"
-                                  type="text"
-                                  v-model="editStorageForm.model"
-                                  required
-                                  placeholder="Enter model storage">
-                    </b-form-input>
-                </b-form-group>
-                <b-form-group id="form-storage-volume-edit-group"
-                              label="Storage volume:"
-                              label-for="form-storage volume-input">
-                    <b-form-input id="form-storage-volume-input"
-                                  type="number"
-                                  v-model="editStorageForm.size_storage"
-                                  required
-                                  placeholder="Enter storage volume">
-                    </b-form-input>
-                </b-form-group>
-                <b-form-group id="form-type-storage-edit-group"
-                              label="Type storage:"
-                              label-for="form-type-storage-input">
-                    <b-form-select v-model="editStorageForm.type_storage">
-                        <b-form-select-option :value="null" disabled>Please select an type storage
-                        </b-form-select-option>
-                        <b-form-select-option v-for="type in list_type" :value="type.id">{{ type.type_storage }}
-                        </b-form-select-option>
-                    </b-form-select>
-                </b-form-group>
-                <b-form-group id="form-inv-edit-group"
-                              label="Inventory number:"
-                              label-for="nvform-inv-input">
-                    <b-form-input id="form-inv-input"
-                                  type="text"
-                                  v-model="editStorageForm.inv"
-                                  required
-                                  placeholder="Enter inventory number">
-                    </b-form-input>
-                </b-form-group>
-                <b-form-group id="form-host-edit-group"
-                              label="Host:"
-                              label-for="form-host-input">
-                    <b-form-select v-model="editStorageForm.host">
-                        <b-form-select-option :value="null"
-                                              disabled>
-                            Please select an host
-                        </b-form-select-option>
-                        <b-form-select-option v-for="host in list_host"
-                                              :value="host.id">
-                            {{ host.name }} - {{ host.os }} - {{ host.ip}}
-                        </b-form-select-option>
-                    </b-form-select>
-                </b-form-group>
-                <b-form-group id="form-date-install-edit-group"
-                              label="Date install:"
-                              label-for="form-date-install-input">
-                    <b-form-input id="form-date-install-input"
-                                  type="date"
-                                  v-model="editStorageForm.date_install"
-                                  required
-                                  placeholder="Enter date install">
-                    </b-form-input>
-                </b-form-group>
-                <b-form-group id="form-description-edit-group"
-                              label="Description:"
-                              label-for="form-description-input">
-                    <b-form-input id="form-description-input"
-                                  type="text"
-                                  v-model="editStorageForm.description"
-                                  required
-                                  for="input-valid"
-                                  placeholder="Enter description">
-                    </b-form-input>
-                </b-form-group>
-                <b-button type="submit" variant="primary">Submit</b-button>
-                <b-button type="reset" variant="danger">Reset</b-button>
-            </b-form>
-        </b-modal>
-    </div>
+    </section>
 </template>
 
 <script>
@@ -445,5 +444,15 @@
 </script>
 
 <style scoped>
+    .col-sm-10 {
+        max-width: 100%;
+    }
 
+    .container {
+        max-width: 100%;
+    }
+
+    .row {
+        margin-left: 7%;
+    }
 </style>

@@ -1,156 +1,153 @@
 <template>
-    <div class="OperatingSystem">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-10">
-                    <p>
-                        <router-link to="/list-vm">List VM</router-link>
-                    </p>
-                    <p>
-                        <router-link to="/">List Hosts</router-link>
-                    </p>
-                    <p>
-                        <router-link to="/list-storage">List storage</router-link>
-                    </p>
-                    <h1>List Operating system</h1>
-                    <hr>
-                    <br><br>
-                    <button type="button" class="btn btn-success btn-sm" v-b-modal.OperatingSystem-modal
-                            @click="getListCapacity">
-                        Add
-                        Operating system
-                    </button>
-                    <br><br>
-                    <alert :message=message v-if="showMessage"></alert>
-                    <table>
-                        <thead>
-                        <tr>
-                            <th scope="col">Family</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Digit capacity</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr v-for="(OperatingSystem, index) in list_OperatingSystem" :key="index">
-                            <td>{{ OperatingSystem.family}}</td>
-                            <td>{{ OperatingSystem.os}}</td>
-                            <td>{{ OperatingSystem.capacity}}</td>
-                            <td>
-                                <button type="button"
-                                        class="btn btn-warning btn-sm"
-                                        v-b-modal.OperatingSystem-update-modal
-                                        @click="editOperatingSystem(OperatingSystem)">
-                                    Update
-                                </button>
-                                <button type="button"
-                                        class="btn btn-danger btn-sm"
-                                        v-b-modal.OperatingSystem-delete-modal
-                                        @click="DeleteOperatingSystem(OperatingSystem)">
-                                    Delete
-                                </button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+    <section id="intro" class="wrapper style1 fullscreen fade-up">
+        <div class="inner">
+            <div class="OperatingSystem">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-10">
+                            <h1>List operating systems</h1>
+                            <hr>
+                            <br><br>
+                            <button type="button" class="btn btn-success btn-sm" v-b-modal.OperatingSystem-modal
+                                    @click="getListCapacity">
+                                Add
+                                OS
+                            </button>
+                            <br><br>
+                            <alert :message=message v-if="showMessage"></alert>
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th scope="col">Family</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Digit capacity</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="(OperatingSystem, index) in list_OperatingSystem" :key="index">
+                                    <td>{{ OperatingSystem.family}}</td>
+                                    <td>{{ OperatingSystem.os}}</td>
+                                    <td>{{ OperatingSystem.capacity}}</td>
+                                    <td>
+                                        <button type="button"
+                                                class="btn btn-warning btn-sm"
+                                                v-b-modal.OperatingSystem-update-modal
+                                                @click="editOperatingSystem(OperatingSystem)">
+                                            Update
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button type="button"
+                                                class="btn btn-danger btn-sm"
+                                                v-b-modal.OperatingSystem-delete-modal
+                                                @click="DeleteOperatingSystem(OperatingSystem)">
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
+                <b-modal ref="addOperatingSystemModal"
+                         id="OperatingSystem-modal"
+                         title="Add a new operating system"
+                         hide-footer>
+                    <b-form @submit="Submit" @reset="Reset" class="w-100">
+                        <b-form-group id="form-family-OperatingSystem-group"
+                                      label="family OperatingSystem:"
+                                      label-for="form-family-OperatingSystem-input">
+                            <b-form-select v-model="addOperatingSystemForm.family">
+                                <b-form-select-option :value="null" disabled>Please select an family Operating system
+                                </b-form-select-option>
+                                <b-form-select-option v-for="family in list_family" :value="family.id">{{ family.name}}
+                                </b-form-select-option>
+                            </b-form-select>
+                        </b-form-group>
+                        <b-form-group id="form-os-group"
+                                      label="Name operating system:"
+                                      label-for="form-os-input">
+                            <b-form-input id="form-os-input"
+                                          type="text"
+                                          v-model="addOperatingSystemForm.os"
+                                          required
+                                          placeholder="Enter name">
+                            </b-form-input>
+                        </b-form-group>
+                        <b-form-group id="form-capacity-group"
+                                      label="capacity:"
+                                      label-for="form-capacity-input">
+                            <b-form-select v-model="addOperatingSystemForm.capacity">
+                                <b-form-select-option :value="null"
+                                                      disabled>
+                                    Please select an capacity
+                                </b-form-select-option>
+                                <b-form-select-option v-for="capacity in list_capacity"
+                                                      :value="capacity.id">
+                                    {{ capacity.bit }}
+                                </b-form-select-option>
+                            </b-form-select>
+                        </b-form-group>
+                        <b-button type="submit" variant="primary">Submit</b-button>
+                        <b-button type="reset" variant="danger">Reset</b-button>
+                    </b-form>
+                </b-modal>
+                <b-modal ref="deleteOperatingSystemModal"
+                         id="OperatingSystem-delete-modal"
+                         title="Delete operating system"
+                         hide-footer>
+                    <b-form @submit="SubmitDelete" @reset="ResetDelete" class="w-100">
+                        <b-button type="submit" variant="primary">Delete</b-button>
+                        <b-button type="reset" variant="danger">Cancel</b-button>
+                    </b-form>
+                </b-modal>
+                <b-modal ref="editOperatingSystemModal"
+                         id="OperatingSystem-update-modal"
+                         title="Update a operating system"
+                         hide-footer>
+                    <b-form @submit="SubmitUpdate" @reset="ResetUpdate" class="w-100">
+                        <b-form-group id="form-family-OperatingSystem-edit-group"
+                                      label="Family operating system:"
+                                      label-for="form-family-OperatingSystem-edit-input">
+                            <b-form-select v-model="editOperatingSystemForm.family">
+                                <b-form-select-option :value="null" disabled>Please select an family Operating system
+                                </b-form-select-option>
+                                <b-form-select-option v-for="family in list_family" :value="family.id">{{ family.name}}
+                                </b-form-select-option>
+                            </b-form-select>
+                        </b-form-group>
+                        <b-form-group id="form-os-edit-group"
+                                      label="Name operating system:"
+                                      label-for="form-name-input">
+                            <b-form-input id="form-os-input"
+                                          type="text"
+                                          v-model="editOperatingSystemForm.os"
+                                          required
+                                          placeholder="Enter name">
+                            </b-form-input>
+                        </b-form-group>
+                        <b-form-group id="form-capacity-edit-group"
+                                      label="capacity:"
+                                      label-for="form-capacity-input">
+                            <b-form-select v-model="editOperatingSystemForm.capacity">
+                                <b-form-select-option :value="null"
+                                                      disabled>
+                                    Please select an capacity
+                                </b-form-select-option>
+                                <b-form-select-option v-for="capacity in list_capacity"
+                                                      :value="capacity.id">
+                                    {{ capacity.bit }}
+                                </b-form-select-option>
+                            </b-form-select>
+                        </b-form-group>
+                        <b-button type="submit" variant="primary">Submit</b-button>
+                        <b-button type="reset" variant="danger">Reset</b-button>
+                    </b-form>
+                </b-modal>
             </div>
         </div>
-        <b-modal ref="addOperatingSystemModal"
-                 id="OperatingSystem-modal"
-                 title="Add a new OperatingSystem"
-                 hide-footer>
-            <b-form @submit="Submit" @reset="Reset" class="w-100">
-                <b-form-group id="form-family-OperatingSystem-group"
-                              label="family OperatingSystem:"
-                              label-for="form-family-OperatingSystem-input">
-                    <b-form-select v-model="addOperatingSystemForm.family">
-                        <b-form-select-option :value="null" disabled>Please select an family Operating system
-                        </b-form-select-option>
-                        <b-form-select-option v-for="family in list_family" :value="family.id">{{ family.name}}
-                        </b-form-select-option>
-                    </b-form-select>
-                </b-form-group>
-                <b-form-group id="form-os-group"
-                              label="Name operating system:"
-                              label-for="form-os-input">
-                    <b-form-input id="form-os-input"
-                                  type="text"
-                                  v-model="addOperatingSystemForm.os"
-                                  required
-                                  placeholder="Enter name">
-                    </b-form-input>
-                </b-form-group>
-                <b-form-group id="form-capacity-group"
-                              label="capacity:"
-                              label-for="form-capacity-input">
-                    <b-form-select v-model="addOperatingSystemForm.capacity">
-                        <b-form-select-option :value="null"
-                                              disabled>
-                            Please select an capacity
-                        </b-form-select-option>
-                        <b-form-select-option v-for="capacity in list_capacity"
-                                              :value="capacity.id">
-                            {{ capacity.bit }}
-                        </b-form-select-option>
-                    </b-form-select>
-                </b-form-group>
-                <b-button type="submit" variant="primary">Submit</b-button>
-                <b-button type="reset" variant="danger">Reset</b-button>
-            </b-form>
-        </b-modal>
-        <b-modal ref="deleteOperatingSystemModal"
-                 id="OperatingSystem-delete-modal"
-                 title="Delete OperatingSystem"
-                 hide-footer>
-            <b-form @submit="SubmitDelete" @reset="ResetDelete" class="w-100">
-                <b-button type="submit" variant="primary">Delete</b-button>
-                <b-button type="reset" variant="danger">Cancel</b-button>
-            </b-form>
-        </b-modal>
-        <b-modal ref="editOperatingSystemModal"
-                 id="OperatingSystem-update-modal"
-                 title="edit a new OperatingSystem"
-                 hide-footer>
-            <b-form @submit="SubmitUpdate" @reset="ResetUpdate" class="w-100">
-                <b-form-group id="form-family-OperatingSystem-edit-group"
-                              label="Family operating system:"
-                              label-for="form-family-OperatingSystem-edit-input">
-                    <b-form-select v-model="editOperatingSystemForm.family">
-                        <b-form-select-option :value="null" disabled>Please select an family Operating system
-                        </b-form-select-option>
-                        <b-form-select-option v-for="family in list_family" :value="family.id">{{ family.name}}
-                        </b-form-select-option>
-                    </b-form-select>
-                </b-form-group>
-                <b-form-group id="form-os-edit-group"
-                              label="Name operating system:"
-                              label-for="form-name-input">
-                    <b-form-input id="form-os-input"
-                                  type="text"
-                                  v-model="editOperatingSystemForm.os"
-                                  required
-                                  placeholder="Enter name">
-                    </b-form-input>
-                </b-form-group>
-                <b-form-group id="form-capacity-edit-group"
-                              label="capacity:"
-                              label-for="form-capacity-input">
-                    <b-form-select v-model="editOperatingSystemForm.capacity">
-                        <b-form-select-option :value="null"
-                                              disabled>
-                            Please select an capacity
-                        </b-form-select-option>
-                        <b-form-select-option v-for="capacity in list_capacity"
-                                              :value="capacity.id">
-                            {{ capacity.bit }}
-                        </b-form-select-option>
-                    </b-form-select>
-                </b-form-group>
-                <b-button type="submit" variant="primary">Submit</b-button>
-                <b-button type="reset" variant="danger">Reset</b-button>
-            </b-form>
-        </b-modal>
-    </div>
+    </section>
 </template>
 
 <script>
@@ -332,5 +329,15 @@
 </script>
 
 <style scoped>
+    .col-sm-10 {
+        max-width: 100%;
+    }
 
+    .container {
+        max-width: 100%;
+    }
+
+    .row {
+        margin-left: 7%;
+    }
 </style>

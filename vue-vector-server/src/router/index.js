@@ -5,13 +5,14 @@ import Virtual from "../components/Virtual";
 import Storage from "../components/Storage";
 import OperatingSystem from "../components/OperatingSystem";
 import DetailHost from "../components/DetailHost";
+import Authorization from "../views/Authorization";
 
 
 Vue.use(VueRouter)
 
 const routes = [
     {
-        path: '/',
+        path: '/list-host',
         name: 'Host',
         component: Host,
     },
@@ -34,6 +35,12 @@ const routes = [
         path: '/:id',
         name: 'DetailHost',
         component: DetailHost,
+        props: true,
+    },
+    {
+        path: '/',
+        name: 'Authorization',
+        component: Authorization,
         props: true,
     },
 ]

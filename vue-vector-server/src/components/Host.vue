@@ -1,247 +1,249 @@
 <template>
-    <div class="host">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-10">
-                    <p>
-                        <router-link to="/list-vm">List VM</router-link>
-                    </p>
-                    <p>
-                        <router-link to="/list-storage">List Storage</router-link>
-                    </p>
-                    <p>
-                        <router-link to="/list-operating-system">List Operating system</router-link>
-                    </p>
-                    <h1>List HOST</h1>
-                    <hr>
-                    <br><br>
-                    <button type="button" class="btn btn-success btn-sm" v-b-modal.host-modal @click="getListOS">Add
-                        Host
-                    </button>
-                    <br><br>
-                    <alert :message=message v-if="showMessage"></alert>
-                    <table>
-                        <thead>
-                        <tr>
-                            <th scope="col">Name</th>
-                            <th scope="col">IP Address</th>
-                            <th scope="col">Operating system</th>
-                            <th scope="col">CPU</th>
-                            <th scope="col">Memory</th>
-                            <th scope="col">Description</th>
-                            <th scope="col">Inv Number</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr v-for="(host, index) in hosts" :key="index">
-                            <td>{{ host.name }}</td>
-                            <td>{{ host.ip }}</td>
-                            <td>{{ host.os }}</td>
-                            <td>{{ host.cpu }}</td>
-                            <td>{{ host.memory }}</td>
-                            <td>{{ host.description }}</td>
-                            <td>{{ host.inv }}</td>
-                            <td>
-                                <button type="button" class="btn btn-success btn-sm" @click="goTo(host.id)">Detail</button>
-                                <button type="button"
-                                        class="btn btn-warning btn-sm"
-                                        v-b-modal.host-update-modal
-                                        @click="editHost(host)">
-                                    Update
-                                </button>
-                                <button type="button"
-                                        class="btn btn-danger btn-sm"
-                                        v-b-modal.host-delete-modal
-                                        @click="DeleteHost(host)">
-                                    Delete
-                                </button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+    <section id="intro" class="wrapper style1 fullscreen fade-up">
+        <div class="inner">
+            <div class="host">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-10">
+                            <h1>List hosts</h1>
+                            <hr>
+                            <br><br>
+                            <button type="button" class="btn btn-success btn-sm" v-b-modal.host-modal
+                                    @click="getListOS">Add
+                                host
+                            </button>
+                            <br><br>
+                            <alert :message=message v-if="showMessage"></alert>
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">IP Address</th>
+                                    <th scope="col">Operating system</th>
+                                    <th scope="col">CPU</th>
+                                    <th scope="col">Memory</th>
+                                    <th scope="col">Description</th>
+                                    <th scope="col">Inv Number</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="(host, index) in hosts" :key="index">
+                                    <td>{{ host.name }}</td>
+                                    <td>{{ host.ip }}</td>
+                                    <td>{{ host.os }}</td>
+                                    <td>{{ host.cpu }}</td>
+                                    <td>{{ host.memory }}</td>
+                                    <td>{{ host.description }}</td>
+                                    <td>{{ host.inv }}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-success btn-sm" @click="goTo(host.id)">
+                                            Detail
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button type="button"
+                                                class="btn btn-warning btn-sm"
+                                                v-b-modal.host-update-modal
+                                                @click="editHost(host)">
+                                            Update
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button type="button"
+                                                class="btn btn-danger btn-sm"
+                                                v-b-modal.host-delete-modal
+                                                @click="DeleteHost(host)">
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
+                <b-modal ref="addHostModal"
+                         id="host-modal"
+                         title="Add a new host"
+                         hide-footer>
+                    <b-form @submit="Submit" @reset="Reset" class="w-100">
+                        <b-form-group id="form-name-group"
+                                      label="Name:"
+                                      label-for="form-name-input">
+                            <b-form-input id="form-name-input"
+                                          type="text"
+                                          v-model="addHostForm.name"
+                                          required
+                                          placeholder="Enter name host">
+                            </b-form-input>
+                        </b-form-group>
+                        <b-form-group id="form-ip-group"
+                                      label="IP address:"
+                                      label-for="form-ip-input">
+                            <b-form-input id="form-ip-input"
+                                          type="text"
+                                          v-model="addHostForm.ip"
+                                          required
+                                          placeholder="Enter ip address">
+                            </b-form-input>
+                        </b-form-group>
+                        <b-form-group id="form-os-group"
+                                      label="Operating system:"
+                                      label-for="form-os-input">
+                            <b-form-select v-model="addHostForm.os">
+                                <b-form-select-option :value="null" disabled>Please select an OS
+                                </b-form-select-option>
+                                <b-form-select-option v-for="os in list_os" :value="os.id">{{ os.family }} {{
+                                    os.os }} {{ os.capacity }}
+                                </b-form-select-option>
+                            </b-form-select>
+                        </b-form-group>
+                        <b-form-group id="form-cpu-group"
+                                      label="CPU:"
+                                      label-for="form-cpu-input">
+                            <b-form-input id="form-cpu-input"
+                                          type="text"
+                                          v-model="addHostForm.cpu"
+                                          required
+                                          placeholder="Enter cpu">
+                            </b-form-input>
+                        </b-form-group>
+                        <b-form-group id="form-memory-group"
+                                      label="Memory:"
+                                      label-for="form-memory-input">
+                            <b-form-input id="form-memory-input"
+                                          type="number"
+                                          v-model="addHostForm.memory"
+                                          required
+                                          placeholder="Enter memory">
+                            </b-form-input>
+                        </b-form-group>
+                        <b-form-group id="form-description-group"
+                                      label="Description:"
+                                      label-for="form-description-input">
+                            <b-form-input id="form-description-input"
+                                          type="text"
+                                          v-model="addHostForm.description"
+                                          required
+                                          placeholder="Enter description">
+                            </b-form-input>
+                        </b-form-group>
+                        <b-form-group id="form-inv-group"
+                                      label="Foreign number:"
+                                      label-for="form-inv-input">
+                            <b-form-input id="form-inv-input"
+                                          type="text"
+                                          v-model="addHostForm.inv"
+                                          required
+                                          placeholder="Enter foreign number">
+                            </b-form-input>
+                        </b-form-group>
+                        <b-button type="submit" variant="primary">Submit</b-button>
+                        <b-button type="reset" variant="danger">Reset</b-button>
+                    </b-form>
+                </b-modal>
+                <b-modal ref="deleteHostModal"
+                         id="host-delete-modal"
+                         title="Delete host"
+                         hide-footer>
+                    <b-form @submit="SubmitDelete" @reset="ResetDelete" class="w-100">
+                        <b-button type="submit" variant="primary">Delete</b-button>
+                        <b-button type="reset" variant="danger">Cancel</b-button>
+                    </b-form>
+                </b-modal>
+                <b-modal ref="editHostModal"
+                         id="host-update-modal"
+                         title="Update host"
+                         hide-footer>
+                    <b-form @submit="SubmitUpdate" @reset="ResetUpdate" class="w-100">
+                        <b-form-group id="form-name-edit-group"
+                                      label="Name:"
+                                      label-for="form-name-edit-input">
+                            <b-form-input id="form-name-edit-input"
+                                          type="text"
+                                          v-model="editHostForm.name"
+                                          required
+                                          placeholder="Enter name">
+                            </b-form-input>
+                        </b-form-group>
+                        <b-form-group id="form-ip-edit-group"
+                                      label="IP address:"
+                                      label-for="form-ip-edit-input">
+                            <b-form-input id="form-ip-edit-input"
+                                          type="text"
+                                          v-model="editHostForm.ip"
+                                          required
+                                          placeholder="Enter ip address">
+                            </b-form-input>
+                        </b-form-group>
+                        <b-form-group id="form-os-edit-group"
+                                      label="Operating system:"
+                                      label-for="form-os-edit-input">
+                            <b-form-select v-model="editHostForm.os">
+                                <template v-slot:first>
+                                    <b-form-select-option v-model="editHostForm.os" :value="editHostForm.os.id"
+                                                          disabled>{{ editHostForm.os }}
+                                    </b-form-select-option>
+                                </template>
+                                <b-form-select-option v-for="os in list_os"
+                                                      :value="os.id">
+                                    {{ os.family }} {{ os.os }} {{ os.capacity }}
+                                </b-form-select-option>
+                            </b-form-select>
+                            <!--                                        <b-form-input id="form-os-edit-input"-->
+                            <!--                                                      type="text"-->
+                            <!--                                                      v-model="editHostForm.os"-->
+                            <!--                                                      required-->
+                            <!--                                                      placeholder="Enter operating system">-->
+                            <!--                                        </b-form-input>-->
+                        </b-form-group>
+                        <b-form-group id="form-cpu-edit-group"
+                                      label="CPU:"
+                                      label-for="form-cpu-edit-input">
+                            <b-form-input id="form-cpu-edit-input"
+                                          type="text"
+                                          v-model="editHostForm.cpu"
+                                          required
+                                          placeholder="Enter cpu">
+                            </b-form-input>
+                        </b-form-group>
+                        <b-form-group id="form-memory-edit-group"
+                                      label="Memory:"
+                                      label-for="form-memory-edit-input">
+                            <b-form-input id="form-memory-edit-input"
+                                          type="number"
+                                          v-model="editHostForm.memory"
+                                          required
+                                          placeholder="Enter memory">
+                            </b-form-input>
+                        </b-form-group>
+                        <b-form-group id="form-description-edit-group"
+                                      label="Description:"
+                                      label-for="form-description-edit-input">
+                            <b-form-input id="form-description-edit-input"
+                                          type="text"
+                                          v-model="editHostForm.description"
+                                          required
+                                          placeholder="Enter description">
+                            </b-form-input>
+                        </b-form-group>
+                        <b-form-group id="form-inv-edit-group"
+                                      label="Foreign number:"
+                                      label-for="form-inv-edit-input">
+                            <b-form-input id="form-inv-edit-input"
+                                          type="text"
+                                          v-model="editHostForm.inv"
+                                          required
+                                          placeholder="Enter foreign number">
+                            </b-form-input>
+                        </b-form-group>
+                        <b-button type="submit" variant="primary">Update</b-button>
+                        <b-button type="reset" variant="danger">Cancel</b-button>
+                    </b-form>
+                </b-modal>
             </div>
         </div>
-        <b-modal ref="addHostModal"
-                 id="host-modal"
-                 title="Add a new host"
-                 hide-footer>
-            <b-form @submit="Submit" @reset="Reset" class="w-100">
-                <b-form-group id="form-name-group"
-                              label="Name:"
-                              label-for="form-name-input">
-                    <b-form-input id="form-name-input"
-                                  type="text"
-                                  v-model="addHostForm.name"
-                                  required
-                                  placeholder="Enter name host">
-                    </b-form-input>
-                </b-form-group>
-                <b-form-group id="form-ip-group"
-                              label="IP address:"
-                              label-for="form-ip-input">
-                    <b-form-input id="form-ip-input"
-                                  type="text"
-                                  v-model="addHostForm.ip"
-                                  required
-                                  placeholder="Enter ip address">
-                    </b-form-input>
-                </b-form-group>
-                <b-form-group id="form-os-group"
-                              label="Operating system:"
-                              label-for="form-os-input">
-                    <b-form-select v-model="addHostForm.os">
-                        <b-form-select-option :value="null" disabled>Please select an OS
-                        </b-form-select-option>
-                        <b-form-select-option v-for="os in list_os" :value="os.id">{{ os.family }} {{
-                            os.os }} {{ os.capacity }}
-                        </b-form-select-option>
-                    </b-form-select>
-                </b-form-group>
-                <b-form-group id="form-cpu-group"
-                              label="CPU:"
-                              label-for="form-cpu-input">
-                    <b-form-input id="form-cpu-input"
-                                  type="text"
-                                  v-model="addHostForm.cpu"
-                                  required
-                                  placeholder="Enter cpu">
-                    </b-form-input>
-                </b-form-group>
-                <b-form-group id="form-memory-group"
-                              label="Memory:"
-                              label-for="form-memory-input">
-                    <b-form-input id="form-memory-input"
-                                  type="number"
-                                  v-model="addHostForm.memory"
-                                  required
-                                  placeholder="Enter memory">
-                    </b-form-input>
-                </b-form-group>
-                <b-form-group id="form-description-group"
-                              label="Description:"
-                              label-for="form-description-input">
-                    <b-form-input id="form-description-input"
-                                  type="text"
-                                  v-model="addHostForm.description"
-                                  required
-                                  placeholder="Enter description">
-                    </b-form-input>
-                </b-form-group>
-                <b-form-group id="form-inv-group"
-                              label="Foreign number:"
-                              label-for="form-inv-input">
-                    <b-form-input id="form-inv-input"
-                                  type="text"
-                                  v-model="addHostForm.inv"
-                                  required
-                                  placeholder="Enter foreign number">
-                    </b-form-input>
-                </b-form-group>
-                <b-button type="submit" variant="primary">Submit</b-button>
-                <b-button type="reset" variant="danger">Reset</b-button>
-            </b-form>
-        </b-modal>
-        <b-modal ref="deleteHostModal"
-                 id="host-delete-modal"
-                 title="Delete host"
-                 hide-footer>
-            <b-form @submit="SubmitDelete" @reset="ResetDelete" class="w-100">
-                <b-button type="submit" variant="primary">Delete</b-button>
-                <b-button type="reset" variant="danger">Cancel</b-button>
-            </b-form>
-        </b-modal>
-        <b-modal ref="editHostModal"
-                 id="host-update-modal"
-                 title="Update host"
-                 hide-footer>
-            <b-form @submit="SubmitUpdate" @reset="ResetUpdate" class="w-100">
-                <b-form-group id="form-name-edit-group"
-                              label="Name:"
-                              label-for="form-name-edit-input">
-                    <b-form-input id="form-name-edit-input"
-                                  type="text"
-                                  v-model="editHostForm.name"
-                                  required
-                                  placeholder="Enter name">
-                    </b-form-input>
-                </b-form-group>
-                <b-form-group id="form-ip-edit-group"
-                              label="IP address:"
-                              label-for="form-ip-edit-input">
-                    <b-form-input id="form-ip-edit-input"
-                                  type="text"
-                                  v-model="editHostForm.ip"
-                                  required
-                                  placeholder="Enter ip address">
-                    </b-form-input>
-                </b-form-group>
-                <b-form-group id="form-os-edit-group"
-                              label="Operating system:"
-                              label-for="form-os-edit-input">
-                    <b-form-select v-model="editHostForm.os">
-                        <template v-slot:first>
-                            <b-form-select-option v-model="editHostForm.os" :value="editHostForm.os.id"
-                                                  disabled>{{ editHostForm.os }}
-                            </b-form-select-option>
-                        </template>
-                        <b-form-select-option v-for="os in list_os"
-                                              :value="os.id">
-                            {{ os.family }} {{ os.os }} {{ os.capacity }}
-                        </b-form-select-option>
-                    </b-form-select>
-                    <!--                                        <b-form-input id="form-os-edit-input"-->
-                    <!--                                                      type="text"-->
-                    <!--                                                      v-model="editHostForm.os"-->
-                    <!--                                                      required-->
-                    <!--                                                      placeholder="Enter operating system">-->
-                    <!--                                        </b-form-input>-->
-                </b-form-group>
-                <b-form-group id="form-cpu-edit-group"
-                              label="CPU:"
-                              label-for="form-cpu-edit-input">
-                    <b-form-input id="form-cpu-edit-input"
-                                  type="text"
-                                  v-model="editHostForm.cpu"
-                                  required
-                                  placeholder="Enter cpu">
-                    </b-form-input>
-                </b-form-group>
-                <b-form-group id="form-memory-edit-group"
-                              label="Memory:"
-                              label-for="form-memory-edit-input">
-                    <b-form-input id="form-memory-edit-input"
-                                  type="number"
-                                  v-model="editHostForm.memory"
-                                  required
-                                  placeholder="Enter memory">
-                    </b-form-input>
-                </b-form-group>
-                <b-form-group id="form-description-edit-group"
-                              label="Description:"
-                              label-for="form-description-edit-input">
-                    <b-form-input id="form-description-edit-input"
-                                  type="text"
-                                  v-model="editHostForm.description"
-                                  required
-                                  placeholder="Enter description">
-                    </b-form-input>
-                </b-form-group>
-                <b-form-group id="form-inv-edit-group"
-                              label="Foreign number:"
-                              label-for="form-inv-edit-input">
-                    <b-form-input id="form-inv-edit-input"
-                                  type="text"
-                                  v-model="editHostForm.inv"
-                                  required
-                                  placeholder="Enter foreign number">
-                    </b-form-input>
-                </b-form-group>
-                <b-button type="submit" variant="primary">Update</b-button>
-                <b-button type="reset" variant="danger">Cancel</b-button>
-            </b-form>
-        </b-modal>
-    </div>
+    </section>
 </template>
 
 <script>
@@ -439,5 +441,15 @@
 </script>
 
 <style scoped>
+    .col-sm-10 {
+        max-width: 100%;
+    }
 
+    .container {
+        max-width: 100%;
+    }
+
+    .row {
+        margin-left: 7%;
+    }
 </style>
