@@ -5,7 +5,19 @@ from .models import (TypeStorageModel,
                      VirtualModel,
                      CapacityModel,
                      OSModel,
-                     FamilyOSModel, )
+                     FamilyOSModel,
+                     CPUModel,
+                     RAIDModel, )
+
+
+@admin.register(CPUModel)
+class AmtCPUAdmin(admin.ModelAdmin):
+    list_display = ('amt_cpu',)
+
+
+@admin.register(RAIDModel)
+class AmtCPUAdmin(admin.ModelAdmin):
+    list_display = ('type_raid',)
 
 
 @admin.register(TypeStorageModel)

@@ -27,9 +27,12 @@ urlpatterns = [
     path('delete-vm/<int:pk>', views.VirtualDeleteView.as_view()),
     path('delete-storage/<int:pk>', views.StorageDeleteView.as_view()),
     path('delete-os/<int:pk>', views.OSDeleteView.as_view()),
+
+    path('script-xls-create/', views.MyView.as_view()),
     path('script-list-os/', views.list, name='list'),
     path('', TemplateView.as_view(template_name='index.html')),
     path('script-add-os/', views.add_row, name='add_row'),
+
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

@@ -21,7 +21,12 @@
                                     <th scope="col">IP Address</th>
                                     <th scope="col">Operating system</th>
                                     <th scope="col">CPU</th>
-                                    <th scope="col">Memory</th>
+                                    <th scope="col">CPUs</th>
+                                    <th scope="col">RAM</th>
+                                    <th scope="col">free RAM</th>
+                                    <th scope="col">Vol. drive</th>
+                                    <th scope="col">free drive</th>
+                                    <th scope="col">RAID</th>
                                     <th scope="col">Description</th>
                                     <th scope="col">Inv Number</th>
                                 </tr>
@@ -32,7 +37,12 @@
                                     <td>{{ host.ip }}</td>
                                     <td>{{ host.os }}</td>
                                     <td>{{ host.cpu }}</td>
-                                    <td>{{ host.memory }}</td>
+                                    <td>{{ host.amt_cpu }}</td>
+                                    <td>{{ host.memory }} Gb</td>
+                                    <td>{{ host.free_memory }} Gb</td>
+                                    <td>{{ host.total_storage }} Gb</td>
+                                    <td>{{ host.free_storage }} Gb</td>
+                                    <td>{{ host.raid }}</td>
                                     <td>{{ host.description }}</td>
                                     <td>{{ host.inv }}</td>
                                     <td>
@@ -190,12 +200,6 @@
                                     {{ os.family }} {{ os.os }} {{ os.capacity }}
                                 </b-form-select-option>
                             </b-form-select>
-                            <!--                                        <b-form-input id="form-os-edit-input"-->
-                            <!--                                                      type="text"-->
-                            <!--                                                      v-model="editHostForm.os"-->
-                            <!--                                                      required-->
-                            <!--                                                      placeholder="Enter operating system">-->
-                            <!--                                        </b-form-input>-->
                         </b-form-group>
                         <b-form-group id="form-cpu-edit-group"
                                       label="CPU:"

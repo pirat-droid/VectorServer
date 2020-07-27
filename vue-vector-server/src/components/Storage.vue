@@ -40,7 +40,7 @@
                                         <button type="button"
                                                 class="btn btn-warning btn-sm"
                                                 v-b-modal.Storage-update-modal
-                                                @click="editStorage(storage)">
+                                                @click="editStorage(Storage)">
                                             Update
                                         </button>
                                     </td>
@@ -48,7 +48,7 @@
                                         <button type="button"
                                                 class="btn btn-danger btn-sm"
                                                 v-b-modal.Storage-delete-modal
-                                                @click="DeleteStorage(storage)">
+                                                @click="DeleteStorage(Storage)">
                                             Delete
                                         </button>
                                     </td>

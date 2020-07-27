@@ -11,7 +11,6 @@ from rest_framework import serializers
 class ListStorageSerializer(serializers.ModelSerializer):
     """Сериализация списка накопителей"""
     type_storage = serializers.CharField(source='type_storage.type_storage')
-    # host = serializers.CharField(source='host.name')
 
     class Meta:
         model = StorageModel
@@ -34,28 +33,23 @@ class ListVirtualInHostSerializer(serializers.ModelSerializer):
         fields = ('id',
                   'name',
                   'ip',
+                  'cores',
+                  'threads',
+                  'storage_size',
+                  'memory',
                   'os',
                   'description',)
 
 
 class ListHostSerializer(serializers.ModelSerializer):
     """Сериализаия списка хостов"""
-    storage = ListStorageSerializer(read_only=True, many=True)
+    # storage = ListStorageSerializer(read_only=True, many=True)
     os = serializers.CharField(source='os.__str__')
+    amt_cpu = serializers.IntegerField(source='amt_cpu.amt_cpu')
 
     class Meta:
         model = HostModel
-        fields = ['id',
-                  'name',
-                  'os',
-                  'storage',
-                  'ip',
-                  'description',
-                  'cpu',
-                  'memory',
-                  'inv',
-                  ]
-
+        fields = '__all__'
 
 class ListSelectHostSerializer(serializers.ModelSerializer):
     """Сериализаия списка хостов при добавлении или изменении виртуальной машины"""
@@ -74,22 +68,12 @@ class DetailHostSerializer(serializers.ModelSerializer):
     """Сериализатор детального описания хоста"""
     storage = ListStorageSerializer(read_only=True, many=True)
     os = serializers.CharField(source='os.__str__')
-    # virtuals = serializers.StringRelatedField(many=True)
     virtuals = ListVirtualInHostSerializer(read_only=True, many=True)
+    amt_cpu = serializers.IntegerField(source='amt_cpu.amt_cpu')
 
     class Meta:
         model = HostModel
-        fields = ['id',
-                  'name',
-                  'os',
-                  'virtuals',
-                  'storage',
-                  'ip',
-                  'description',
-                  'cpu',
-                  'memory',
-                  'inv',
-                  ]
+        fields = '__all__'
 
 
 class AddHostSerializer(serializers.ModelSerializer):
@@ -110,14 +94,14 @@ class ListVirtualSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class DetailVirtualSerializer(serializers.ModelSerializer):
-    """Сериализатор детального описания виртуальной машины"""
-    os = serializers.CharField(source='os.__str__')
-    host = serializers.CharField(source='host.name')
-
-    class Meta:
-        model = VirtualModel
-        exclude = ['user', 'date_create']
+# class DetailVirtualSerializer(serializers.ModelSerializer):
+#     """Сериализатор детального описания виртуальной машины"""
+#     os = serializers.CharField(source='os.__str__')
+#     host = serializers.CharField(source='host.name')
+#
+#     class Meta:
+#         model = VirtualModel
+#         exclude = ['user', 'date_create']
 
 
 class AddVirtualSerializer(serializers.ModelSerializer):
