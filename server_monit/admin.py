@@ -7,7 +7,13 @@ from .models import (TypeStorageModel,
                      OSModel,
                      FamilyOSModel,
                      CPUModel,
-                     RAIDModel, )
+                     RAIDModel,
+                     ClusterModel,)
+
+
+@admin.register(ClusterModel)
+class AmtCPUAdmin(admin.ModelAdmin):
+    list_display = ('name',)
 
 
 @admin.register(CPUModel)
@@ -32,7 +38,7 @@ class TypeStorageAdmin(admin.ModelAdmin):
 
 @admin.register(StorageModel)
 class StorageAdmin(admin.ModelAdmin):
-    list_display = ('model', 'type_storage', 'size_storage', 'inv', 'date_install')
+    list_display = ('model', 'type_storage', 'size_storage', 'serial_number', 'date_install', 'raid', 'host')
     search_fields = ('model', 'inv', 'date_install')
     list_filter = ('model', 'type_storage', 'size_storage')
 

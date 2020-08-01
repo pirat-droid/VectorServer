@@ -12,6 +12,7 @@ class ClusterModel(models.Model):
         verbose_name = 'Кластер'
         verbose_name_plural = 'Кластеры'
 
+
 class RAIDModel(models.Model):
     type_raid = models.CharField('Тип RAID массива', max_length=10)
 
@@ -88,7 +89,7 @@ class HostModel(models.Model):
     cpu = models.CharField('Процессор', max_length=50)
     amt_cpu = models.ForeignKey(CPUModel, on_delete=models.CASCADE, default=1,
                                 verbose_name='Количество процессоров на материнской плате')
-    raid_controller = models.BooleanField('RAID контроллер', default=False)
+    raid_controller = models.CharField('RAID контроллер', max_length=100)
     cluster = models.ForeignKey('self', verbose_name="Кластер", on_delete=models.SET_NULL, blank=True, null=True,
                                 related_name="children")
     total_storage = models.PositiveSmallIntegerField('Общий объём накопителей', default=0)
@@ -108,14 +109,14 @@ class HostModel(models.Model):
 
 class StorageModel(models.Model):
     model = models.CharField('Модель накопителя', max_length=50)
-    inv = models.CharField('Инв. №', max_length=50)
-    host = models.ForeignKey(HostModel, verbose_name='На каком хосте размещен', null=True, on_delete=models.SET_NULL,
-                             default='', related_name='storage')
+    serial_number = models.CharField('s/n', max_length=50)
+    host = models.ForeignKey(HostModel, verbose_name='На каком хосте размещен', on_delete=models.CASCADE,
+                             related_name='storage')
     size_storage = models.PositiveSmallIntegerField('Объём накопителя в гигабайтах', )
     type_storage = models.ForeignKey(TypeStorageModel, on_delete=models.CASCADE, verbose_name='Тип накопителя')
     date_install = models.DateField('Дата установки', null=True, blank=True)
     description = models.CharField('Пометки', max_length=500, null=True, blank=True)
-    raid = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, verbose_name='RAID массив',
+    raid = models.ForeignKey(RAIDModel, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='RAID массив',
                              related_name='children')
 
     def __str__(self):
@@ -137,7 +138,8 @@ class VirtualModel(models.Model):
     threads = models.PositiveSmallIntegerField('Колличество потоков')
     memory = models.PositiveSmallIntegerField('Объём оперативной памяти в гигабайтах')
     storage_size = models.PositiveSmallIntegerField('Объём накопителя в гигабайтах')
-    type_raid = models.ForeignKey('RAIDModel', null=True, blank=True, on_delete=models.CASCADE, verbose_name='Тип RAID массива')
+    type_raid = models.ForeignKey('RAIDModel', null=True, blank=True, on_delete=models.CASCADE,
+                                  verbose_name='Тип RAID массива')
 
     def __str__(self):
         return f"{self.name} - {self.ip} - {self.os}"
@@ -145,4 +147,3 @@ class VirtualModel(models.Model):
     class Meta:
         verbose_name = 'Виртуальный сервер'
         verbose_name_plural = 'Виртуальные сервера'
-

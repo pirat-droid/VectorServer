@@ -42,7 +42,7 @@
                                     <td>{{ host.free_memory }} Gb</td>
                                     <td>{{ host.total_storage }} Gb</td>
                                     <td>{{ host.free_storage }} Gb</td>
-                                    <td>{{ host.raid }}</td>
+                                    <td>{{ host.raid_controller }}</td>
                                     <td>{{ host.description }}</td>
                                     <td>{{ host.inv }}</td>
                                     <td>

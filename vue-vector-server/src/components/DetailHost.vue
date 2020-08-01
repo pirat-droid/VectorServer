@@ -23,7 +23,7 @@
                                     <th scope="col">free drive</th>
                                     <th scope="col">RAID</th>
                                     <th scope="col">Description</th>
-                                    <th scope="col">Inv Number</th>
+                                    <th scope="col">serial_number Number</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -37,9 +37,9 @@
                                     <td>{{ host.free_memory }} Gb</td>
                                     <td>{{ host.total_storage }} Gb</td>
                                     <td>{{ host.free_storage }} Gb</td>
-                                    <td>{{ host.raid }}</td>
+                                    <td>{{ host.raid_controller }}</td>
                                     <td>{{ host.description }}</td>
-                                    <td>{{ host.inv }}</td>
+                                    <td>{{ host.serial_number }}</td>
                                     <td>
                                         <button type="button"
                                                 class="btn btn-warning btn-sm"
@@ -113,7 +113,7 @@
                                     <th scope="col">Model</th>
                                     <th scope="col">Storage volume</th>
                                     <th scope="col">Storage type</th>
-                                    <th scope="col">Inventory number</th>
+                                    <th scope="col">s/n</th>
                                     <th scope="col">Date install</th>
                                     <th scope="col">Description</th>
                                 </tr>
@@ -123,7 +123,7 @@
                                     <td>{{ Storage.model }}</td>
                                     <td>{{ Storage.size_storage }}</td>
                                     <td>{{ Storage.type_storage }}</td>
-                                    <td>{{ Storage.inv }}</td>
+                                    <td>{{ Storage.serial_number }}</td>
                                     <td>{{ Storage.date_install }}</td>
                                     <td>{{ Storage.description }}</td>
 
@@ -229,12 +229,12 @@
                                           placeholder="Enter description">
                             </b-form-input>
                         </b-form-group>
-                        <b-form-group id="form-inv-edit-group"
+                        <b-form-group id="form-serial_number-edit-group"
                                       label="Foreign number:"
-                                      label-for="form-inv-edit-input">
-                            <b-form-input id="form-inv-edit-input"
+                                      label-for="form-serial_number-edit-input">
+                            <b-form-input id="form-serial_number-edit-input"
                                           type="text"
-                                          v-model="editHostForm.inv"
+                                          v-model="editHostForm.serial_number"
                                           required
                                           placeholder="Enter foreign number">
                             </b-form-input>
@@ -405,14 +405,14 @@
                                 </b-form-select-option>
                             </b-form-select>
                         </b-form-group>
-                        <b-form-group id="form-storage-inv-edit-group"
-                                      label="Inventory number:"
-                                      label-for="form-storage-inv-input">
-                            <b-form-input id="form-inv-input"
+                        <b-form-group id="form-storage-serial_number-edit-group"
+                                      label="serial_numberentory number:"
+                                      label-for="form-storage-serial_number-input">
+                            <b-form-input id="form-serial_number-input"
                                           type="text"
-                                          v-model="editStorageForm.inv"
+                                          v-model="editStorageForm.serial_number"
                                           required
-                                          placeholder="Enter inventory number">
+                                          placeholder="Enter serial_numberentory number">
                             </b-form-input>
                         </b-form-group>
                         <b-form-group id="form-host-edit-group"
@@ -478,7 +478,7 @@
                     cpu: '',
                     memory: null,
                     description: '',
-                    inv: '',
+                    serial_number: '',
                 },
                 deleteHostForm: {
                     id: '',
@@ -517,7 +517,7 @@
                     type_storage: '',
                     date_install: '',
                     description: '',
-                    inv: '',
+                    serial_number: '',
                 },
                 editStorageForm: {
                     model: '',
@@ -526,7 +526,7 @@
                     type_storage: '',
                     date_install: null,
                     description: null,
-                    inv: '',
+                    serial_number: '',
                 },
                 deleteStorageForm: {
                     id: '',
@@ -570,7 +570,7 @@
                 this.editHostForm.cpu = '';
                 this.editHostForm.memory = 0;
                 this.editHostForm.description = '';
-                this.editHostForm.inv = '';
+                this.editHostForm.serial_number = '';
             },
             editHost(host) {
                 this.editHostForm = host
@@ -587,7 +587,7 @@
                     cpu: this.editHostForm.cpu,
                     memory: this.editHostForm.memory,
                     description: this.editHostForm.description,
-                    inv: this.editHostForm.inv,
+                    serial_number: this.editHostForm.serial_number,
                 }
                 this.updateHost(payload, this.editHostForm.id)
             },
@@ -830,7 +830,7 @@
                 this.addStorageForm.size_storage = '';
                 this.addStorageForm.date_install = null;
                 this.addStorageForm.description = null;
-                this.addStorageForm.inv = '';
+                this.addStorageForm.serial_number = '';
                 this.addStorageForm.type_storage = '';
 
                 this.editStorageForm.model = '';
@@ -838,7 +838,7 @@
                 this.editStorageForm.size_storage = '';
                 this.editStorageForm.date_install = '';
                 this.editStorageForm.description = '';
-                this.editStorageForm.inv = '';
+                this.editStorageForm.serial_number = '';
                 this.editStorageForm.type_storage = '';
             },
             SubmitStorage(evt) {
@@ -850,7 +850,7 @@
                     size_storage: this.addStorageForm.size_storage,
                     date_install: this.addStorageForm.date_install,
                     description: this.addStorageForm.description,
-                    inv: this.addStorageForm.inv,
+                    serial_number: this.addStorageForm.serial_number,
                     type_storage: this.addStorageForm.type_storage,
                 }
                 this.addStorage(payload);
@@ -876,7 +876,7 @@
                     size_storage: this.editStorageForm.size_storage,
                     date_install: this.editStorageForm.date_install,
                     description: this.editStorageForm.description,
-                    inv: this.editStorageForm.inv,
+                    serial_number: this.editStorageForm.serial_number,
                     type_storage: this.editStorageForm.type_storage,
                 }
                 this.updateStorage(payload, this.editStorageForm.id)

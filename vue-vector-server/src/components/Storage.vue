@@ -21,7 +21,7 @@
                                     <th scope="col">Model</th>
                                     <th scope="col">Storage volume</th>
                                     <th scope="col">Storage type</th>
-                                    <th scope="col">Inventory number</th>
+                                    <th scope="col">s/n</th>
                                     <th scope="col">host</th>
                                     <th scope="col">Date install</th>
                                     <th scope="col">Description</th>
@@ -32,7 +32,7 @@
                                     <td>{{ Storage.model }}</td>
                                     <td>{{ Storage.size_storage }}</td>
                                     <td>{{ Storage.type_storage }}</td>
-                                    <td>{{ Storage.inv }}</td>
+                                    <td>{{ Storage.serial_number }}</td>
                                     <td>{{ Storage.host }}</td>
                                     <td>{{ Storage.date_install }}</td>
                                     <td>{{ Storage.description }}</td>
@@ -94,14 +94,14 @@
                                 </b-form-select-option>
                             </b-form-select>
                         </b-form-group>
-                        <b-form-group id="form-inv-group"
-                                      label="Inventory number:"
-                                      label-for="nvform-inv-input">
-                            <b-form-input id="form-inv-input"
+                        <b-form-group id="form-sssserial_number-group"
+                                      label="sssserial_numberentory number:"
+                                      label-for="nvform-sssserial_number-input">
+                            <b-form-input id="form-sssserial_number-input"
                                           type="text"
-                                          v-model="addStorageForm.inv"
+                                          v-model="addStorageForm.sssserial_number"
                                           required
-                                          placeholder="Enter inventory number">
+                                          placeholder="Enter sssserial_numberentory number">
                             </b-form-input>
                         </b-form-group>
                         <b-form-group id="form-host-group"
@@ -187,14 +187,14 @@
                                 </b-form-select-option>
                             </b-form-select>
                         </b-form-group>
-                        <b-form-group id="form-inv-edit-group"
-                                      label="Inventory number:"
-                                      label-for="nvform-inv-input">
-                            <b-form-input id="form-inv-input"
+                        <b-form-group id="form-sssserial_number-edit-group"
+                                      label="sssserial_numberentory number:"
+                                      label-for="nvform-sssserial_number-input">
+                            <b-form-input id="form-sssserial_number-input"
                                           type="text"
-                                          v-model="editStorageForm.inv"
+                                          v-model="editStorageForm.sssserial_number"
                                           required
-                                          placeholder="Enter inventory number">
+                                          placeholder="Enter sssserial_numberentory number">
                             </b-form-input>
                         </b-form-group>
                         <b-form-group id="form-host-edit-group"
@@ -257,7 +257,7 @@
                     type_storage: '',
                     date_install: '',
                     description: '',
-                    inv: '',
+                    sssserial_number: '',
                 },
                 editStorageForm: {
                     model: '',
@@ -266,7 +266,7 @@
                     type_storage: '',
                     date_install: null,
                     description: null,
-                    inv: '',
+                    sssserial_number: '',
                 },
                 deleteStorageForm: {
                     id: '',
@@ -335,7 +335,7 @@
                 this.addStorageForm.size_storage = '';
                 this.addStorageForm.date_install = null;
                 this.addStorageForm.description = null;
-                this.addStorageForm.inv = '';
+                this.addStorageForm.sssserial_number = '';
                 this.addStorageForm.type_storage = '';
 
                 this.editStorageForm.model = '';
@@ -343,7 +343,7 @@
                 this.editStorageForm.size_storage = '';
                 this.editStorageForm.date_install = '';
                 this.editStorageForm.description = '';
-                this.editStorageForm.inv = '';
+                this.editStorageForm.sssserial_number = '';
                 this.editStorageForm.type_storage = '';
             },
             Submit(evt) {
@@ -355,7 +355,7 @@
                     size_storage: this.addStorageForm.size_storage,
                     date_install: this.addStorageForm.date_install,
                     description: this.addStorageForm.description,
-                    inv: this.addStorageForm.inv,
+                    sssserial_number: this.addStorageForm.sssserial_number,
                     type_storage: this.addStorageForm.type_storage,
                 }
                 this.addStorage(payload);
@@ -381,7 +381,7 @@
                     size_storage: this.editStorageForm.size_storage,
                     date_install: this.editStorageForm.date_install,
                     description: this.editStorageForm.description,
-                    inv: this.editStorageForm.inv,
+                    sssserial_number: this.editStorageForm.sssserial_number,
                     type_storage: this.editStorageForm.type_storage,
                 }
                 this.updateStorage(payload, this.editStorageForm.id)

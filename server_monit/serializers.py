@@ -14,14 +14,7 @@ class ListStorageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StorageModel
-        fields = ['id',
-                  'model',
-                  'inv',
-                  'size_storage',
-                  'type_storage',
-                  'date_install',
-                  'description',
-                  'host']
+        fields = '__all__'
 
 
 class ListVirtualInHostSerializer(serializers.ModelSerializer):
@@ -43,13 +36,13 @@ class ListVirtualInHostSerializer(serializers.ModelSerializer):
 
 class ListHostSerializer(serializers.ModelSerializer):
     """Сериализаия списка хостов"""
-    # storage = ListStorageSerializer(read_only=True, many=True)
     os = serializers.CharField(source='os.__str__')
     amt_cpu = serializers.IntegerField(source='amt_cpu.amt_cpu')
 
     class Meta:
         model = HostModel
         fields = '__all__'
+
 
 class ListSelectHostSerializer(serializers.ModelSerializer):
     """Сериализаия списка хостов при добавлении или изменении виртуальной машины"""
@@ -118,6 +111,7 @@ class ListTypeStorageSerializer(serializers.ModelSerializer):
     class Meta:
         model = TypeStorageModel
         fields = ['id', 'type_storage']
+
 
 class AddStorageSerializer(serializers.ModelSerializer):
     """Сериализация добавления накопителя"""
