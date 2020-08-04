@@ -12,7 +12,8 @@ from .models import (TypeStorageModel,
                      VirtualModel,
                      CapacityModel,
                      OSModel,
-                     FamilyOSModel, )
+                     FamilyOSModel,
+                     CPUModel, )
 from .serializers import (ListHostSerializer,
                           ListVirtualSerializer,
                           ListStorageSerializer,
@@ -22,7 +23,7 @@ from .serializers import (ListHostSerializer,
                           AddHostSerializer,
                           AddVirtualSerializer,
                           DetailHostSerializer,
-    # DetailVirtualSerializer,
+                          ListCPUSerializer,
                           ListTypeStorageSerializer,
                           ListHostStorageSerializer,
                           ListFamilySerializer,
@@ -50,6 +51,8 @@ class SearchStorage(View):
 
     def get(self, request):
         parsing_hw()
+        # host = HostModel.objects.filter(os=(OSModel.objects.filter(family=ily=1)))
+        # print(host)
         return render(request, 'test.html')
 
 
@@ -90,6 +93,15 @@ class HostListView(APIView):
     def get(self, request):
         list = HostModel.objects.all()
         serializer = ListHostSerializer(list, many=True)
+        return Response(serializer.data)
+
+
+class CPUListView(APIView):
+    """Вывод списка количества CPU"""
+
+    def get(self, request):
+        list = CPUModel.objects.all()
+        serializer = ListCPUSerializer(list, many=True)
         return Response(serializer.data)
 
 

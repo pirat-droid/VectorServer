@@ -4,13 +4,21 @@ from .models import (TypeStorageModel,
                      VirtualModel,
                      OSModel,
                      FamilyOSModel,
-                     CapacityModel,)
+                     CapacityModel,
+                     CPUModel,)
 from rest_framework import serializers
 
 
-class ListStorageSerializer(serializers.ModelSerializer):
+class ListCPUSerializer(serializers.ModelSerializer):
     """Сериализация списка накопителей"""
-    type_storage = serializers.CharField(source='type_storage.type_storage')
+
+    class Meta:
+        model = CPUModel
+        fields = '__all__'
+
+
+class ListStorageSerializer(serializers.ModelSerializer):
+    """Сериализация списка количества cpu"""
 
     class Meta:
         model = StorageModel

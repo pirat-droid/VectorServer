@@ -13,6 +13,7 @@ urlpatterns = [
     path('list-select-host/', views.HostSelectView.as_view()),
     path('list-family/', views.FamilyListView.as_view()),
     path('list-capacity/', views.CapacityListView.as_view()),
+    path('list-cpu/', views.CPUListView.as_view()),
     path('host/<int:pk>', views.HostDetailView.as_view()),
     path('vm/<int:pk>', views.VMDetailView.as_view()),
     path('add-host/', views.HostAddView.as_view()),

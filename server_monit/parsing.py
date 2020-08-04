@@ -35,7 +35,7 @@ def parsing_hw():
     conn = sql_connection()
     cursor = conn.cursor()
     # находим все хосты с операционной системой windows
-    sql_host = '''SELECT ip, id FROM server_monit_hostmodel WHERE server_monit_hostmodel.os_id =
+    sql_host = '''SELECT ip, id FROM server_monit_hostmodel WHERE server_monit_hostmodel.os_id in
      (SELECT id FROM server_monit_osmodel WHERE server_monit_osmodel.family_id = 1)'''
     cursor.execute(sql_host)
     sql_host = cursor.fetchall()
@@ -50,7 +50,7 @@ def parsing_hw():
         # Извлекаем id
         host_id = sql_i[1]
         logging.info('IP адрес хоста - %s', host_ip)
-        logging.info('ID хоста - %s', host_ip)
+        logging.info('ID хоста - %s', host_id)
         host_i += 1
 
         url = 'https://' + host_ip + ':8444/SuperDoctor5/'
@@ -124,10 +124,12 @@ def parsing_hw():
             logging.info('Серийный номер накопителя - %s', storage_sn)
             page = search_delete('</span></td>', page, False)
             page = search_delete('<td style="white-space: nowrap">', page, False)
-            storage_size = search_delete(' TB</td>', page, True)
+            storage_size = search_delete('</td>', page, True)
+            storage_size = storage_size.replace(' TB', '')
+            storage_size = storage_size.replace(' GB', '')
             storage_size = storage_size.replace('.', '')
             logging.info('Размер накопителя - %s', storage_size)
-            page = search_delete(' TB</td>', page, False)
+            page = search_delete('</td>', page, False)
             page = search_delete('<th scope="row" class="spec" width="30%"><span>Media Type</span>&nbsp;</th>', page, False)
             page = search_delete('<td><span>', page, False)
             storage_type = search_delete('</span>&nbsp;</td>', page, True)
@@ -169,11 +171,22 @@ def parsing_hw():
             i += 1
 
         #   Ищем общий объём и свободное место на диске
+        # time.sleep(6)
         driver.find_element_by_xpath("//span[text()='Onboard Controller']").click()
         logging.info('Нажимаем на "Onboard Controller"')
-        time.sleep(4)
+        time.sleep(15)
         page = driver.page_source
         page = search_delete('<div id="deviceTitle">Onboard Controller</div>', page, False)
+
+        # Удаляем локальный диск 'A'
+        # value = '<span>Дисковод гибких дисков 3,5 дюйма</span>'
+        # index = page.find(value)
+        # if index > 0:
+        #    print(page)
+        #     page = search_delete('<span>Дисковод гибких дисков 3,5 дюйма</span>', page, False)
+        # page = search_delete('<span>Локальный несъемный диск</span>', page, False)
+        # logging.info('Удаляем локальный диск "a:/"')
+        # Ищем локальные диски и складываем их
 
         # Удаляем локальный диск 'C'
         page = search_delete('<td><span>Локальный несъемный диск</span></td>', page, False)
@@ -186,34 +199,66 @@ def parsing_hw():
         logging.info('Найденно %s локальных дисков', str(count))
 
         i = 0
+        total_size_storage = 0
+        total_storage_free_size = 0
         while i < count:
             # ищем обчий объём места на диске
             page = search_delete('Capacity: <span>', page, False)
-            storage_size = search_delete(' GB<', page, True)
+            storage_size = search_delete('</span>', page, True)
             logging.info('Объём локального диска - %s', storage_size)
-            page = search_delete(' GB<', page, False)
+            page = search_delete('</span>', page, False)
+            # Удаляем хвост " GB" и " Byte"
+            value = ' GB'
+            index = storage_size.find(value)
+            if index > 0:
+                storage_size = storage_size[:index]
+                logging.info('Удаляем символ " GB"')
+            value = ' Byte'
+            index = storage_size.find(value)
+            if index > 0:
+                storage_size = storage_size[:index]
+                logging.info('Удаляем символ " Byte"')
             # Округляем до целых
             value = '.'
             index = storage_size.find(value)
             if index > 0:
                 storage_size = storage_size[:index]
                 logging.info('Локальный диск округлен до гигабайт - %s', storage_size)
-            # total_size_storage += storage_size
+                total_size_storage += int(storage_size)
+            else:
+                total_size_storage += int(storage_size)
 
             # ищем объём свободного места на диске
             page = search_delete('Free space: <span>', page, False)
-            storage_free_size = search_delete(' GB<', page, True)
+            storage_free_size = search_delete('</span>', page, True)
             logging.info('Найденно свободное место на локальном диске - %s', storage_free_size)
-            page = search_delete(' GB<', page, False)
+            page = search_delete('</span>', page, False)
+            # Удаляем хвост " GB" и " Byte"
+            value = ' GB'
+            index = storage_free_size.find(value)
+            if index > 0:
+                storage_free_size = storage_free_size[:index]
+                logging.info('Удаляем символ " GB"')
+            value = ' Byte'
+            index = storage_free_size.find(value)
+            if index > 0:
+                storage_free_size = storage_free_size[:index]
+                logging.info('Удаляем символ " Byte"')
             # Округляем до целых
             value = '.'
             index = storage_free_size.find(value)
             if index > 0:
                 storage_free_size = storage_free_size[:index]
                 logging.info('Свободное место округленно до гигабайт - %s', storage_free_size)
-            # total_storage_free_size = total_storage_free_size + storage_free_size
-
+                total_storage_free_size += int(storage_free_size)
+            else:
+                total_storage_free_size += int(storage_free_size)
+            print(total_storage_free_size)
+            print(total_size_storage)
             i += 1
+
+        logging.info('Общий объём места на диске - %s', total_size_storage)
+        logging.info('Общий свободный объём на диске - %s', total_storage_free_size)
 
         # Ищем общий объём оперативной памятиы
         driver.find_element_by_xpath("//span[text()='Memory']").click()
@@ -232,7 +277,7 @@ def parsing_hw():
                  raid_controller = ?,
                  memory = ?
                  WHERE id = ?'''
-        cursor.execute(sql, (storage_size, storage_free_size, raid_controller, memory, host_id))
+        cursor.execute(sql, (total_size_storage, total_storage_free_size, raid_controller, memory, host_id))
         conn.commit()
         logging.info('Обновили данные по хосту')
 
