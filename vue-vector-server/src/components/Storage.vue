@@ -94,14 +94,14 @@
                                 </b-form-select-option>
                             </b-form-select>
                         </b-form-group>
-                        <b-form-group id="form-sssserial_number-group"
-                                      label="sssserial_numberentory number:"
-                                      label-for="nvform-sssserial_number-input">
-                            <b-form-input id="form-sssserial_number-input"
+                        <b-form-group id="form-serial_number-group"
+                                      label="Serial number:"
+                                      label-for="form-serial-number-input">
+                            <b-form-input id="form-serial-number-input"
                                           type="text"
-                                          v-model="addStorageForm.sssserial_number"
+                                          v-model="addStorageForm.serial_number"
                                           required
-                                          placeholder="Enter sssserial_numberentory number">
+                                          placeholder="Enter serial number">
                             </b-form-input>
                         </b-form-group>
                         <b-form-group id="form-host-group"
@@ -257,7 +257,7 @@
                     type_storage: '',
                     date_install: '',
                     description: '',
-                    sssserial_number: '',
+                    serial_number: '',
                 },
                 editStorageForm: {
                     model: '',
@@ -266,7 +266,7 @@
                     type_storage: '',
                     date_install: null,
                     description: null,
-                    sssserial_number: '',
+                    serial_number: '',
                 },
                 deleteStorageForm: {
                     id: '',
@@ -335,7 +335,7 @@
                 this.addStorageForm.size_storage = '';
                 this.addStorageForm.date_install = null;
                 this.addStorageForm.description = null;
-                this.addStorageForm.sssserial_number = '';
+                this.addStorageForm.serial_number = '';
                 this.addStorageForm.type_storage = '';
 
                 this.editStorageForm.model = '';
@@ -343,7 +343,7 @@
                 this.editStorageForm.size_storage = '';
                 this.editStorageForm.date_install = '';
                 this.editStorageForm.description = '';
-                this.editStorageForm.sssserial_number = '';
+                this.editStorageForm.serial_number = '';
                 this.editStorageForm.type_storage = '';
             },
             Submit(evt) {
@@ -355,7 +355,7 @@
                     size_storage: this.addStorageForm.size_storage,
                     date_install: this.addStorageForm.date_install,
                     description: this.addStorageForm.description,
-                    sssserial_number: this.addStorageForm.sssserial_number,
+                    serial_number: this.addStorageForm.serial_number,
                     type_storage: this.addStorageForm.type_storage,
                 }
                 this.addStorage(payload);
@@ -381,7 +381,7 @@
                     size_storage: this.editStorageForm.size_storage,
                     date_install: this.editStorageForm.date_install,
                     description: this.editStorageForm.description,
-                    sssserial_number: this.editStorageForm.sssserial_number,
+                    serial_number: this.editStorageForm.serial_number,
                     type_storage: this.editStorageForm.type_storage,
                 }
                 this.updateStorage(payload, this.editStorageForm.id)

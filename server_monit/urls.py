@@ -15,6 +15,7 @@ urlpatterns = [
     path('list-capacity/', views.CapacityListView.as_view()),
     path('list-cpu/', views.CPUListView.as_view()),
     path('host/<int:pk>', views.HostDetailView.as_view()),
+    path('host-vm/<int:pk>', views.HostVMView.as_view()),
     path('vm/<int:pk>', views.VMDetailView.as_view()),
     path('add-host/', views.HostAddView.as_view()),
     path('add-vm/', views.VirtualAddView.as_view()),
@@ -29,7 +30,7 @@ urlpatterns = [
     path('delete-storage/<int:pk>', views.StorageDeleteView.as_view()),
     path('delete-os/<int:pk>', views.OSDeleteView.as_view()),
 
-    path('script-xls-create/', views.MyView.as_view()),
+    path('script-xls-create/', views.report, name='report'),
     path('script-search-storage/', views.SearchStorage.as_view()),
     path('script-list-os/', views.list, name='list'),
     path('', TemplateView.as_view(template_name='index.html')),

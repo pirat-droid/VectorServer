@@ -15,7 +15,7 @@
                     <li>
                         <router-link to="/list-operating-system">Operating systems</router-link>
                     </li>
-                    <li><a href="http://127.0.0.1:8000/api/script-xls-create/">Uploading a report to .xls</a></li>
+                    <li><a href="http://192.168.19.132:8000/api/script-xls-create/">Uploading a report to .xls</a></li>
                 </ul>
             </nav>
         </div>

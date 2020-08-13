@@ -17,6 +17,14 @@ class ListCPUSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ListCPUSerializer(serializers.ModelSerializer):
+    """Сериализация списка накопителей"""
+
+    class Meta:
+        model = CPUModel
+        fields = '__all__'
+
+
 class ListStorageSerializer(serializers.ModelSerializer):
     """Сериализация списка количества cpu"""
 
@@ -50,6 +58,24 @@ class ListHostSerializer(serializers.ModelSerializer):
     class Meta:
         model = HostModel
         fields = '__all__'
+
+
+class VMSerializer(serializers.ModelSerializer):
+    """Сериализаия списка виртуальных машин"""
+
+    class Meta:
+        model = VirtualModel
+        fields = '__all__'
+
+
+class HostVMSerializer(serializers.ModelSerializer):
+    """Сериализаия списка виртуальных машин на хосте"""
+    virtuals  = VMSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = HostModel
+        fields = ['virtuals',]
+
 
 
 class ListSelectHostSerializer(serializers.ModelSerializer):

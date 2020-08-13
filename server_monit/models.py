@@ -138,8 +138,6 @@ class VirtualModel(models.Model):
     threads = models.PositiveSmallIntegerField('Колличество потоков')
     memory = models.PositiveSmallIntegerField('Объём оперативной памяти в гигабайтах')
     storage_size = models.PositiveSmallIntegerField('Объём накопителя в гигабайтах')
-    type_raid = models.ForeignKey('RAIDModel', null=True, blank=True, on_delete=models.CASCADE,
-                                  verbose_name='Тип RAID массива')
 
     def __str__(self):
         return f"{self.name} - {self.ip} - {self.os}"
