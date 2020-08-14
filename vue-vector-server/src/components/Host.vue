@@ -3,74 +3,95 @@
     <div class="inner">
       <div class="host">
         <div class="container">
-          <div class="row">
-            <div class="col-sm-10">
-              <h1>List hosts</h1>
-              <hr>
-              <br><br>
+          <!--          <div class="row">-->
+          <div>
+            <h1>Список хостов</h1>
+            <hr>
+            <br><br>
+            <div>
               <button type="button" class="btn btn-success btn-sm" v-b-modal.host-modal
-                      @click="getListOS">Add
-                host
+                      @click="getListOS">
+                Добавить хост
               </button>
-              <br><br>
-              <alert :message=message v-if="showMessage"></alert>
-              <table>
-                <thead>
-                <tr>
-                  <th scope="col">Name</th>
-                  <th scope="col">IP Address</th>
-                  <th scope="col">Operating system</th>
-                  <th scope="col">CPU</th>
-                  <th scope="col">CPUs</th>
-                  <th scope="col">RAM</th>
-                  <th scope="col">free RAM</th>
-                  <th scope="col">Vol. drive</th>
-                  <th scope="col">free drive</th>
-                  <th scope="col">RAID</th>
-                  <th scope="col">Description</th>
-                  <th scope="col">Inv Number</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="(host, index) in hosts" :key="index">
-                  <td>{{ host.name }}</td>
-                  <td>{{ host.ip }}</td>
-                  <td>{{ host.os }}</td>
-                  <td>{{ host.cpu }}</td>
-                  <td>{{ host.amt_cpu }}</td>
-                  <td>{{ host.memory }} Gb</td>
-                  <td>{{ host.free_memory }} Gb</td>
-                  <td>{{ host.total_storage }} Gb</td>
-                  <td>{{ host.free_storage }} Gb</td>
-                  <td>{{ host.raid_controller }}</td>
-                  <td>{{ host.description }}</td>
-                  <td>{{ host.inv }}</td>
-                  <td>
-                    <button type="button" class="btn btn-success btn-sm" @click="goTo(host.id)">
-                      Detail
-                    </button>
-                  </td>
-                  <td>
-                    <button type="button"
-                            class="btn btn-warning btn-sm"
-                            v-b-modal.host-update-modal
-                            @click="editHost(host)">
-                      Update
-                    </button>
-                  </td>
-                  <td>
-                    <button type="button"
-                            class="btn btn-danger btn-sm"
-                            v-b-modal.host-delete-modal
-                            @click="DeleteHost(host)">
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-                </tbody>
-              </table>
             </div>
+            <div>
+              <button type="button" class="btn btn-success btn-sm" @click="goTo(picked.id)">
+                Подробно
+              </button>
+              <button type="button"
+                      class="btn btn-warning btn-sm"
+                      v-b-modal.host-update-modal
+                      @click="editHost(picked)">
+                Обновить
+              </button>
+              <button type="button"
+                      class="btn btn-danger btn-sm"
+                      v-b-modal.host-delete-modal
+                      @click="DeleteHost(picked)">
+                Удалить
+              </button>
+            </div>
+            <br><br>
+            <alert :message=message v-if="showMessage"></alert>
+            <table class="table-fill">
+              <thead>
+              <tr>
+                <th scope="col"></th>
+                <th scope="col">Name</th>
+                <th scope="col">IP Address</th>
+                <th scope="col">Operating system</th>
+                <th scope="col">CPU</th>
+                <th scope="col">CPUs</th>
+                <th scope="col">RAM</th>
+                <th scope="col">free RAM</th>
+                <th scope="col">Vol. drive</th>
+                <th scope="col">free drive</th>
+                <th scope="col">RAID</th>
+                <th scope="col">Description</th>
+                <th scope="col">Inv Number</th>
+              </tr>
+              </thead>
+              <tbody class="table-hover">
+              <tr v-for="(host, index) in hosts" :key="index">
+                <td><input type="radio" name="profile" id="one" :value="host" v-model="picked"></td>
+                <td>{{ host.name }}</td>
+                <td>{{ host.ip }}</td>
+                <td>{{ host.os }}</td>
+                <td>{{ host.cpu }}</td>
+                <td>{{ host.amt_cpu }}</td>
+                <td>{{ host.memory }} Gb</td>
+                <td>{{ host.free_memory }} Gb</td>
+                <td>{{ host.total_storage }} Gb</td>
+                <td>{{ host.free_storage }} Gb</td>
+                <td>{{ host.raid_controller }}</td>
+                <td>{{ host.description }}</td>
+                <td>{{ host.inv }}</td>
+                <!--                  <td>-->
+                <!--                    <button type="button" class="btn btn-success btn-sm" @click="goTo(host.id)">-->
+                <!--                      Detail-->
+                <!--                    </button>-->
+                <!--                  </td>-->
+                <!--                  <td>-->
+                <!--                    <button type="button"-->
+                <!--                            class="btn btn-warning btn-sm"-->
+                <!--                            v-b-modal.host-update-modal-->
+                <!--                            @click="editHost(host)">-->
+                <!--                      Update-->
+                <!--                    </button>-->
+                <!--                  </td>-->
+                <!--                  <td>-->
+                <!--                    <button type="button"-->
+                <!--                            class="btn btn-danger btn-sm"-->
+                <!--                            v-b-modal.host-delete-modal-->
+                <!--                            @click="DeleteHost(host)">-->
+                <!--                      Delete-->
+                <!--                    </button>-->
+                <!--                  </td>-->
+              </tr>
+              </tbody>
+            </table>
           </div>
+          <!--          </div>-->
         </div>
         <b-modal ref="addHostModal"
                  id="host-modal"
@@ -252,7 +273,7 @@
                             placeholder="Enter memory">
               </b-form-input>
             </b-form-group>
-                        <b-form-group id="form-raid-controller_edit-group"
+            <b-form-group id="form-raid-controller_edit-group"
                           label="RAID контроллер:"
                           label-for="form-raid-controller-input">
               <b-form-input id="form-raid-controller-input"
@@ -299,6 +320,7 @@ export default {
   name: "Host",
   data() {
     return {
+      picked: {},
       hosts: [],
       addHostForm: {
         name: '',
@@ -511,15 +533,15 @@ export default {
 </script>
 
 <style scoped>
-.col-sm-10 {
-  max-width: 100%;
-}
+/*.col-sm-10 {*/
+/*  max-width: 100%;*/
+/*}*/
 
 .container {
   max-width: 100%;
 }
 
-.row {
-  margin-left: 7%;
-}
+/*.row {*/
+/*  margin-left: 7%;*/
+/*}*/
 </style>
