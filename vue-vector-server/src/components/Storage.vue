@@ -7,6 +7,7 @@
               <hr>
               <br><br>
             <div class="left">
+
                 <button type="button" class="btn btn-success btn-sm" v-b-modal.Storage-modal
                         @click="getListHost">
                   Добавить
