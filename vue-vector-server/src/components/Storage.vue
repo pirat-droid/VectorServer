@@ -3,23 +3,21 @@
     <div class="inner">
       <div class="Storage">
         <div class="container">
-          <div class="row">
-            <div class="col-sm-10">
               <h1>Список накопителей</h1>
               <hr>
               <br><br>
-              <div>
+            <div class="left">
                 <button type="button" class="btn btn-success btn-sm" v-b-modal.Storage-modal
                         @click="getListHost">
                   Добавить
                 </button>
               </div>
-              <div>
+            <div class="right">
                 <button type="button"
                         class="btn btn-warning btn-sm"
                         v-b-modal.Storage-update-modal
                         @click="editStorage(picked)">
-                  Обновить
+                  Редактировать
                 </button>
                 <button type="button"
                         class="btn btn-danger btn-sm"
@@ -45,9 +43,9 @@
                 </thead>
                 <tbody class="table-hover">
                 <tr v-for="(Storage, index) in list_storage" :key="index">
-                <td><input type="radio" name="profile" id="one" :value="Storage" v-model="picked"></td>
+                  <td><input type="radio" name="profile" id="one" :value="Storage" v-model="picked"></td>
                   <td>{{ Storage.model }}</td>
-                  <td>{{ Storage.size_storage }}</td>
+                  <td>{{ Storage.size_storage }} GB</td>
                   <td>{{ Storage.type_storage }}</td>
                   <td>{{ Storage.serial_number }}</td>
                   <td>{{ Storage.host }}</td>
@@ -56,8 +54,6 @@
                 </tr>
                 </tbody>
               </table>
-            </div>
-          </div>
         </div>
         <b-modal ref="addStorageModal"
                  id="Storage-modal"
@@ -85,6 +81,7 @@
                             placeholder="Enter storage volume">
               </b-form-input>
             </b-form-group>
+
             <b-form-group id="form-type-storage-group"
                           label="Type storage:"
                           label-for="form-type-storage-input">
@@ -95,6 +92,7 @@
                 </b-form-select-option>
               </b-form-select>
             </b-form-group>
+
             <b-form-group id="form-serial_number-group"
                           label="Serial number:"
                           label-for="form-serial-number-input">
@@ -144,6 +142,7 @@
             <b-button type="reset" variant="danger">Reset</b-button>
           </b-form>
         </b-modal>
+
         <b-modal ref="deleteStorageModal"
                  id="Storage-delete-modal"
                  title="Delete storage"
@@ -153,6 +152,7 @@
             <b-button type="reset" variant="danger">Выйти</b-button>
           </b-form>
         </b-modal>
+
         <b-modal ref="editStorageModal"
                  id="Storage-update-modal"
                  title="Update a storage"
@@ -178,40 +178,49 @@
                             placeholder="Enter storage volume">
               </b-form-input>
             </b-form-group>
+
             <b-form-group id="form-type-storage-edit-group"
                           label="Type storage:"
                           label-for="form-type-storage-input">
               <b-form-select v-model="editStorageForm.type_storage">
-                <b-form-select-option :value="null" disabled>Please select an type storage
-                </b-form-select-option>
+                <template v-slot:first>
+                  <b-form-select-option :value="editStorageForm.type_storage" disabled>
+                    {{ editStorageForm.type_storage }}
+                  </b-form-select-option>
+                </template>
                 <b-form-select-option v-for="type in list_type" :value="type.id">{{ type.type_storage }}
                 </b-form-select-option>
               </b-form-select>
             </b-form-group>
+
             <b-form-group id="form-serial_number-edit-group"
                           label="serial numberentory number:"
                           label-for="nvform-serial_number-input">
               <b-form-input id="form-serial_number-input"
                             type="text"
-                            v-model="editStorageForm.sssserial_number"
+                            v-model="editStorageForm.serial_number"
                             required
                             placeholder="Enter serial numberentory number">
               </b-form-input>
             </b-form-group>
+
             <b-form-group id="form-host-edit-group"
                           label="Host:"
                           label-for="form-host-input">
               <b-form-select v-model="editStorageForm.host">
-                <b-form-select-option :value="null"
-                                      disabled>
-                  Please select an host
-                </b-form-select-option>
+                <template v-slot:first>
+                  <b-form-select-option :value="editStorageForm.host"
+                                        disabled>
+                    {{ editStorageForm.host }}
+                  </b-form-select-option>
+                </template>
                 <b-form-select-option v-for="host in list_host"
                                       :value="host.id">
                   {{ host.name }} - {{ host.os }} - {{ host.ip }}
                 </b-form-select-option>
               </b-form-select>
             </b-form-group>
+
             <b-form-group id="form-date-install-edit-group"
                           label="Date install:"
                           label-for="form-date-install-input">

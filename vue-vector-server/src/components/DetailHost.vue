@@ -3,155 +3,153 @@
     <div class="inner">
       <div class="host">
         <div class="container">
-          <div class="row">
-            <div class="col-sm-10">
-              <h1>Хост: {{ host.name }}</h1>
-              <hr>
-              <br><br>
-              <div>
-                <button type="button"
-                        class="btn btn-warning btn-sm"
-                        v-b-modal.host-update-modal
-                        @click="editHost(picked_host)">
-                  Обновить
-                </button>
-                <button type="button"
-                        class="btn btn-danger btn-sm"
-                        v-b-modal.host-delete-modal
-                        @click="DeleteHost(picked_host)">
-                  Удалить
-                </button>
-              </div>
-              <alert :message=message v-if="showMessage"></alert>
-              <table class="table-fill">
-                <thead>
-                <tr>
-                  <th scope="col"></th>
-                  <th scope="col">Name</th>
-                  <th scope="col">IP Address</th>
-                  <th scope="col">Operating system</th>
-                  <th scope="col">CPU</th>
-                  <th scope="col">CPUs</th>
-                  <th scope="col">RAM</th>
-                  <th scope="col">free RAM</th>
-                  <th scope="col">Vol. drive</th>
-                  <th scope="col">free drive</th>
-                  <th scope="col">RAID</th>
-                  <th scope="col">Description</th>
-                  <th scope="col">serial_number Number</th>
-                </tr>
-                </thead>
-                <tbody class="table-hover">
-                <tr>
-                  <td><input type="radio" name="profile" id="one" :value="host" v-model="picked_host"></td>
-                  <td>{{ host.name }}</td>
-                  <td>{{ host.ip }}</td>
-                  <td>{{ host.os }}</td>
-                  <td>{{ host.cpu }}</td>
-                  <td>{{ host.amt_cpu }}</td>
-                  <td>{{ host.memory }} Gb</td>
-                  <td>{{ host.free_memory }} Gb</td>
-                  <td>{{ host.total_storage }} Gb</td>
-                  <td>{{ host.free_storage }} Gb</td>
-                  <td>{{ host.raid_controller }}</td>
-                  <td>{{ host.description }}</td>
-                  <td>{{ host.serial_number }}</td>
-                </tr>
-                </tbody>
-              </table>
-              <h1>Виртуальные машины хоста:</h1>
-              <hr>
-              <br><br>
-              <div>
-                <button type="button"
-                        class="btn btn-warning btn-sm"
-                        v-b-modal.vm-update-modal
-                        @click="editVM(picked_vm)">
-                  Обновить
-                </button>
-                <button type="button"
-                        class="btn btn-danger btn-sm"
-                        v-b-modal.vm-delete-modal
-                        @click="DeleteVM(picked_vm)">
-                  Удалить
-                </button>
-              </div>
-              <table>
-                <thead>
-                <tr>
-                  <th scope="col"></th>
-                  <th scope="col">Name</th>
-                  <th scope="col">IP Address</th>
-                  <th scope="col">Operating system</th>
-                  <th scope="col">Cores</th>
-                  <th scope="col">Threads</th>
-                  <th scope="col">Memory</th>
-                  <th scope="col">Storage size</th>
-                  <th scope="col">Description</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="(vm, index) in host.virtuals" :key="index">
-                  <td><input type="radio" name="profile" id="one" :value="host" v-model="picked_vm"></td>
-                  <td>{{ vm.name }}</td>
-                  <td>{{ vm.ip }}</td>
-                  <td>{{ vm.os }}</td>
-                  <td>{{ vm.cores }}</td>
-                  <td>{{ vm.threads }}</td>
-                  <td>{{ vm.memory }} Gb</td>
-                  <td>{{ vm.storage_size }} Gb</td>
-                  <td>{{ vm.description }}</td>
-                </tr>
-                </tbody>
-              </table>
-              <h1>Накопители хоста:</h1>
-              <hr>
-              <br><br>
-              <div>
-                <td>
-                  <button type="button"
-                          class="btn btn-warning btn-sm"
-                          v-b-modal.Storage-update-modal
-                          @click="editStorage(picked_storage)">
-                    Обновить
-                  </button>
-                </td>
-                <td>
-                  <button type="button"
-                          class="btn btn-danger btn-sm"
-                          v-b-modal.Storage-delete-modal
-                          @click="DeleteStorage(picked_storage)">
-                    Удалить
-                  </button>
-                </td>
-              </div>
-              <table class="table-fill">
-                <thead>
-                <tr>
-                  <th scope="col"></th>
-                  <th scope="col">Model</th>
-                  <th scope="col">Storage volume</th>
-                  <th scope="col">Storage type</th>
-                  <th scope="col">s/n</th>
-                  <th scope="col">Date install</th>
-                  <th scope="col">Description</th>
-                </tr>
-                </thead>
-                <tbody class="table-hover">
-                <tr v-for="(Storage, index) in host.storage" :key="index">
-                  <td><input type="radio" name="profile" id="three" :value="host" v-model="picked_storage"></td>
-                  <td>{{ Storage.model }}</td>
-                  <td>{{ Storage.size_storage }}</td>
-                  <td>{{ Storage.type_storage }}</td>
-                  <td>{{ Storage.serial_number }}</td>
-                  <td>{{ Storage.date_install }}</td>
-                  <td>{{ Storage.description }}</td>
-                </tr>
-                </tbody>
-              </table>
-            </div>
+          <h1>Хост: {{ host.name }}</h1>
+          <hr>
+          <br><br>
+          <div class="right">
+            <button type="button"
+                    class="btn btn-warning btn-sm"
+                    v-b-modal.host-update-modal
+                    @click="editHost(picked_host)">
+              Редактировать
+            </button>
+            <button type="button"
+                    class="btn btn-danger btn-sm"
+                    v-b-modal.host-delete-modal
+                    @click="DeleteHost(picked_host)">
+              Удалить
+            </button>
           </div>
+          <br><br>
+          <alert :message=message v-if="showMessage"></alert>
+          <table class="table-fill">
+            <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Name</th>
+              <th scope="col">IP Address</th>
+              <th scope="col">Operating system</th>
+              <th scope="col">CPU</th>
+              <th scope="col">CPUs</th>
+              <th scope="col">RAM</th>
+              <th scope="col">free RAM</th>
+              <th scope="col">Vol. drive</th>
+              <th scope="col">free drive</th>
+              <th scope="col">RAID</th>
+              <th scope="col">Description</th>
+              <th scope="col">serial_number Number</th>
+            </tr>
+            </thead>
+            <tbody class="table-hover">
+            <tr>
+              <td><input type="radio" name="profile" id="one" :value="host" v-model="picked_host"></td>
+              <td>{{ host.name }}</td>
+              <td>{{ host.ip }}</td>
+              <td>{{ host.os }}</td>
+              <td>{{ host.cpu }}</td>
+              <td>{{ host.amt_cpu }}</td>
+              <td>{{ host.memory }} Gb</td>
+              <td>{{ host.free_memory }} Gb</td>
+              <td>{{ host.total_storage }} Gb</td>
+              <td>{{ host.free_storage }} Gb</td>
+              <td>{{ host.raid_controller }}</td>
+              <td>{{ host.description }}</td>
+              <td>{{ host.serial_number }}</td>
+            </tr>
+            </tbody>
+          </table>
+          <br><br>
+          <h1>Виртуальные машины хоста:</h1>
+          <hr>
+          <br><br>
+          <div class="right">
+            <button type="button"
+                    class="btn btn-warning btn-sm"
+                    v-b-modal.vm-update-modal
+                    @click="editVM(picked_vm)">
+              Редактировать
+            </button>
+            <button type="button"
+                    class="btn btn-danger btn-sm"
+                    v-b-modal.vm-delete-modal
+                    @click="DeleteVM(picked_vm)">
+              Удалить
+            </button>
+          </div>
+          <br><br>
+          <table class="table-fill">
+            <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Name</th>
+              <th scope="col">IP Address</th>
+              <th scope="col">Operating system</th>
+              <th scope="col">Cores</th>
+              <th scope="col">Threads</th>
+              <th scope="col">Memory</th>
+              <th scope="col">Storage size</th>
+              <th scope="col">Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="(vm, index) in host.virtuals" :key="index">
+              <td><input type="radio" name="profile" id="two" :value="vm" v-model="picked_vm"></td>
+              <td>{{ vm.name }}</td>
+              <td>{{ vm.ip }}</td>
+              <td>{{ vm.os }}</td>
+              <td>{{ vm.cores }}</td>
+              <td>{{ vm.threads }}</td>
+              <td>{{ vm.memory }} Gb</td>
+              <td>{{ vm.storage_size }} Gb</td>
+              <td>{{ vm.description }}</td>
+            </tr>
+            </tbody>
+          </table>
+          <br><br>
+          <h1>Накопители хоста:</h1>
+          <hr>
+          <br><br>
+          <div class="right">
+            <button type="button"
+                    class="btn btn-warning btn-sm"
+                    v-b-modal.Storage-update-modal
+                    @click="editStorage(picked_storage)">
+              Редактировать
+            </button>
+            <button type="button"
+                    class="btn btn-danger btn-sm"
+                    v-b-modal.Storage-delete-modal
+                    @click="DeleteStorage(picked_storage)">
+              Удалить
+            </button>
+          </div>
+          <br><br>
+          <table class="table-fill">
+            <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Model</th>
+              <th scope="col">Storage volume</th>
+              <th scope="col">Storage type</th>
+              <th scope="col">s/n</th>
+              <th scope="col">Date install</th>
+              <th scope="col">Description</th>
+            </tr>
+            </thead>
+            <tbody class="table-hover">
+            <tr v-for="(Storage, index) in host.storage" :key="index">
+              <td><input type="radio" name="profile" id="three" :value="Storage" v-model="picked_storage"></td>
+              <td>{{ Storage.model }}</td>
+              <td>{{ Storage.size_storage }} GB</td>
+              <td>{{ Storage.type_storage }}</td>
+              <td>{{ Storage.serial_number }}</td>
+              <td>{{ Storage.date_install }}</td>
+              <td>{{ Storage.description }}</td>
+            </tr>
+            </tbody>
+          </table>
         </div>
+
         <b-modal ref="deleteHostModal"
                  id="host-delete-modal"
                  title="Delete host"
@@ -245,6 +243,7 @@
             <b-button type="reset" variant="danger">Cancel</b-button>
           </b-form>
         </b-modal>
+
         <b-modal ref="editVMModal"
                  id="vm-update-modal"
                  title="Update a virtual machine"
@@ -270,28 +269,32 @@
                             placeholder="Enter ip address">
               </b-form-input>
             </b-form-group>
+
             <b-form-group id="form-vm-host-edit-group"
                           label="Host:"
                           label-for="form-host-input">
               <b-form-select v-model="editVMForm.host">
-                <b-form-select-option :value="null"
-                                      disabled>
-                  Please select an host
-                </b-form-select-option>
+                <template v-slot:first>
+                  <b-form-select-option :value="editVMForm.host"
+                                        disabled>
+                    {{ editVMForm.host }}
+                  </b-form-select-option>
+                </template>
                 <b-form-select-option v-for="host in hosts"
                                       :value="host.id">
                   {{ host.name }} - {{ host.os }} - {{ host.ip }}
                 </b-form-select-option>
               </b-form-select>
             </b-form-group>
+
             <b-form-group id="form-vm-os-edit-group"
                           label="Operating system:"
                           label-for="form-os-input">
               <b-form-select v-model="editVMForm.os">
                 <template v-slot:first>
-                  <b-form-select-option :value="null"
+                  <b-form-select-option :value="editVMForm.os"
                                         disabled>
-                    Please select an OS
+                    {{ editVMForm.os }}
                   </b-form-select-option>
                 </template>
                 <b-form-select-option v-for="os in list_os"
@@ -300,6 +303,7 @@
                 </b-form-select-option>
               </b-form-select>
             </b-form-group>
+
             <b-form-group id="form-vm-cores-edit-group"
                           label="Cores:"
                           label-for="form-cores-input">
@@ -354,6 +358,7 @@
             <b-button type="reset" variant="danger">Reset</b-button>
           </b-form>
         </b-modal>
+
         <b-modal ref="deleteVMModal"
                  id="vm-delete-modal"
                  title="Delete virtual machine"
@@ -372,6 +377,7 @@
             <b-button type="reset" variant="danger">Cancel</b-button>
           </b-form>
         </b-modal>
+
         <b-modal ref="editStorageModal"
                  id="Storage-update-modal"
                  title="Update a storage"
@@ -397,16 +403,21 @@
                             placeholder="Enter storage volume">
               </b-form-input>
             </b-form-group>
+
             <b-form-group id="form-type-storage-edit-group"
                           label="Type storage:"
                           label-for="form-type-storage-input">
               <b-form-select v-model="editStorageForm.type_storage">
-                <b-form-select-option :value="null" disabled>Please select an type storage
-                </b-form-select-option>
+                <template v-slot:first>
+                  <b-form-select-option :value="editStorageForm.type_storage" disabled>
+                    {{ editStorageForm.type_storage }}
+                  </b-form-select-option>
+                </template>
                 <b-form-select-option v-for="type in list_type" :value="type.id">{{ type.type_storage }}
                 </b-form-select-option>
               </b-form-select>
             </b-form-group>
+
             <b-form-group id="form-storage-serial_number-edit-group"
                           label="serial_numberentory number:"
                           label-for="form-storage-serial_number-input">
@@ -417,20 +428,24 @@
                             placeholder="Enter serial_numberentory number">
               </b-form-input>
             </b-form-group>
+
             <b-form-group id="form-host-edit-group"
                           label="Host:"
                           label-for="form-host-input">
               <b-form-select v-model="editStorageForm.host">
-                <b-form-select-option :value="null"
-                                      disabled>
-                  Please select an host
-                </b-form-select-option>
-                <b-form-select-option v-for="host in hosts"
+                <template v-slot:first>
+                  <b-form-select-option :value="editStorageForm.host"
+                                        disabled>
+                    {{ editStorageForm.host }}
+                  </b-form-select-option>
+                </template>
+                <b-form-select-option v-for="host in list_host"
                                       :value="host.id">
                   {{ host.name }} - {{ host.os }} - {{ host.ip }}
                 </b-form-select-option>
               </b-form-select>
             </b-form-group>
+
             <b-form-group id="form-date-install-edit-group"
                           label="Date install:"
                           label-for="form-date-install-input">
@@ -456,6 +471,7 @@
             <b-button type="reset" variant="danger">Reset</b-button>
           </b-form>
         </b-modal>
+
       </div>
     </div>
   </section>

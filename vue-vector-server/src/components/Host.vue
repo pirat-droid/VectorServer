@@ -3,18 +3,17 @@
     <div class="inner">
       <div class="host">
         <div class="container">
-          <!--          <div class="row">-->
           <div>
             <h1>Список хостов</h1>
             <hr>
             <br><br>
-            <div>
+            <div class="left">
               <button type="button" class="btn btn-success btn-sm" v-b-modal.host-modal
                       @click="getListOS">
                 Добавить хост
               </button>
             </div>
-            <div>
+            <div class="right">
               <button type="button" class="btn btn-success btn-sm" @click="goTo(picked.id)">
                 Подробно
               </button>
@@ -66,32 +65,10 @@
                 <td>{{ host.raid_controller }}</td>
                 <td>{{ host.description }}</td>
                 <td>{{ host.inv }}</td>
-                <!--                  <td>-->
-                <!--                    <button type="button" class="btn btn-success btn-sm" @click="goTo(host.id)">-->
-                <!--                      Detail-->
-                <!--                    </button>-->
-                <!--                  </td>-->
-                <!--                  <td>-->
-                <!--                    <button type="button"-->
-                <!--                            class="btn btn-warning btn-sm"-->
-                <!--                            v-b-modal.host-update-modal-->
-                <!--                            @click="editHost(host)">-->
-                <!--                      Update-->
-                <!--                    </button>-->
-                <!--                  </td>-->
-                <!--                  <td>-->
-                <!--                    <button type="button"-->
-                <!--                            class="btn btn-danger btn-sm"-->
-                <!--                            v-b-modal.host-delete-modal-->
-                <!--                            @click="DeleteHost(host)">-->
-                <!--                      Delete-->
-                <!--                    </button>-->
-                <!--                  </td>-->
               </tr>
               </tbody>
             </table>
           </div>
-          <!--          </div>-->
         </div>
         <b-modal ref="addHostModal"
                  id="host-modal"
@@ -118,6 +95,7 @@
                             placeholder="Enter ip address">
               </b-form-input>
             </b-form-group>
+
             <b-form-group id="form-os-group"
                           label="Operating system:"
                           label-for="form-os-input">
@@ -130,6 +108,7 @@
                 </b-form-select-option>
               </b-form-select>
             </b-form-group>
+
             <b-form-group id="form-cpu-group"
                           label="CPU:"
                           label-for="form-cpu-input">
@@ -194,6 +173,7 @@
             <b-button type="reset" variant="danger">Reset</b-button>
           </b-form>
         </b-modal>
+
         <b-modal ref="deleteHostModal"
                  id="host-delete-modal"
                  title="Delete host"
@@ -203,6 +183,7 @@
             <b-button type="reset" variant="danger">Cancel</b-button>
           </b-form>
         </b-modal>
+
         <b-modal ref="editHostModal"
                  id="host-update-modal"
                  title="Update host"
@@ -228,6 +209,7 @@
                             placeholder="Enter ip address">
               </b-form-input>
             </b-form-group>
+
             <b-form-group id="form-os-edit-group"
                           label="Operating system:"
                           label-for="form-os-edit-input">
@@ -243,6 +225,7 @@
                 </b-form-select-option>
               </b-form-select>
             </b-form-group>
+
             <b-form-group id="form-cpu-edit-group"
                           label="CPU:"
                           label-for="form-cpu-edit-input">

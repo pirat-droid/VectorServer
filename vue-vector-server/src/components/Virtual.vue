@@ -3,66 +3,62 @@
     <div class="inner">
       <div class="host">
         <div class="container">
-          <div class="row">
-            <div class="col-sm-10">
-              <h1>Список виртуальных машин</h1>
-              <hr>
-              <br><br>
-              <div></div>
-              <button type="button" class="btn btn-success btn-sm" v-b-modal.vm-modal @click="getListOS">
-                Добавить
-              </button>
-              <div>
-
-                <button type="button"
-                        class="btn btn-warning btn-sm"
-                        v-b-modal.vm-update-modal
-                        @click="editVM(pocked)">
-                  Обновить
-                </button>
-
-                <button type="button"
-                        class="btn btn-danger btn-sm"
-                        v-b-modal.vm-delete-modal
-                        @click="DeleteVM(pocked)">
-                  Удалить
-                </button>
-
-              </div>
-              <br><br>
-              <alert :message=message v-if="showMessage"></alert>
-              <table class="table-fill">
-                <thead>
-                <tr>
-                  <th scope="col"></th>
-                  <th scope="col">Name</th>
-                  <th scope="col">IP Address</th>
-                  <th scope="col">Host</th>
-                  <th scope="col">Operating system</th>
-                  <th scope="col">Cores</th>
-                  <th scope="col">Threads</th>
-                  <th scope="col">Storage size</th>
-                  <th scope="col">Memory</th>
-                  <th scope="col">Description</th>
-                </tr>
-                </thead>
-                <tbody class="table-hover">
-                <tr v-for="(vm, index) in virtuals" :key="index">
-                  <td><input type="radio" name="profile" id="one" :value="vm" v-model="picked"></td>
-                  <td>{{ vm.name }}</td>
-                  <td>{{ vm.ip }}</td>
-                  <td>{{ vm.host }}</td>
-                  <td>{{ vm.os }}</td>
-                  <td>{{ vm.cores }}</td>
-                  <td>{{ vm.threads }}</td>
-                  <td>{{ vm.storage_size }} Gb</td>
-                  <td>{{ vm.memory }} Gb</td>
-                  <td>{{ vm.description }}</td>
-                </tr>
-                </tbody>
-              </table>
+          <h1>Список виртуальных машин</h1>
+          <hr>
+          <br><br>
+            <div class="left">
+          <button type="button" class="btn btn-success btn-sm" v-b-modal.vm-modal @click="getListOS">
+            Добавить
+          </button>
             </div>
+            <div class="right">
+            <button type="button"
+                    class="btn btn-warning btn-sm"
+                    v-b-modal.vm-update-modal
+                    @click="editVM(picked)">
+              Ркдактировать
+            </button>
+
+            <button type="button"
+                    class="btn btn-danger btn-sm"
+                    v-b-modal.vm-delete-modal
+                    @click="DeleteVM(picked)">
+              Удалить
+            </button>
+
           </div>
+          <br><br>
+          <alert :message=message v-if="showMessage"></alert>
+          <table class="table-fill">
+            <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Name</th>
+              <th scope="col">IP Address</th>
+              <th scope="col">Host</th>
+              <th scope="col">Operating system</th>
+              <th scope="col">Cores</th>
+              <th scope="col">Threads</th>
+              <th scope="col">Storage size</th>
+              <th scope="col">Memory</th>
+              <th scope="col">Description</th>
+            </tr>
+            </thead>
+            <tbody class="table-hover">
+            <tr v-for="(vm, index) in virtuals" :key="index">
+              <td><input type="radio" name="profile" id="one" :value="vm" v-model="picked"></td>
+              <td>{{ vm.name }}</td>
+              <td>{{ vm.ip }}</td>
+              <td>{{ vm.host }}</td>
+              <td>{{ vm.os }}</td>
+              <td>{{ vm.cores }}</td>
+              <td>{{ vm.threads }}</td>
+              <td>{{ vm.storage_size }} Gb</td>
+              <td>{{ vm.memory }} Gb</td>
+              <td>{{ vm.description }}</td>
+            </tr>
+            </tbody>
+          </table>
         </div>
         <b-modal ref="addVMModal"
                  id="vm-modal"
@@ -173,6 +169,7 @@
             <b-button type="reset" variant="danger">Reset</b-button>
           </b-form>
         </b-modal>
+
         <b-modal ref="editVMModal"
                  id="vm-update-modal"
                  title="Update a virtual machine"
@@ -198,28 +195,32 @@
                             placeholder="Enter ip address">
               </b-form-input>
             </b-form-group>
+
             <b-form-group id="form-host-edit-group"
                           label="Host:"
                           label-for="form-host-input">
               <b-form-select v-model="editVMForm.host">
-                <b-form-select-option :value="null"
-                                      disabled>
-                  Please select an host
-                </b-form-select-option>
+                <template v-slot:first>
+                  <b-form-select-option :value="editVMForm.host"
+                                        disabled>
+                    {{ editVMForm.host }}
+                  </b-form-select-option>
+                </template>
                 <b-form-select-option v-for="host in hosts"
                                       :value="host.id">
                   {{ host.name }} - {{ host.os }} - {{ host.ip }}
                 </b-form-select-option>
               </b-form-select>
             </b-form-group>
+
             <b-form-group id="form-os-edit-group"
                           label="Operating system:"
                           label-for="form-os-input">
               <b-form-select v-model="editVMForm.os">
                 <template v-slot:first>
-                  <b-form-select-option :value="null"
+                  <b-form-select-option :value="editVMForm.os"
                                         disabled>
-                    Please select an OS
+                    {{ editVMForm.os }}
                   </b-form-select-option>
                 </template>
                 <b-form-select-option v-for="os in list_os"
@@ -228,6 +229,7 @@
                 </b-form-select-option>
               </b-form-select>
             </b-form-group>
+
             <b-form-group id="form-cores-edit-group"
                           label="Cores:"
                           label-for="form-cores-input">
@@ -282,6 +284,7 @@
             <b-button type="reset" variant="danger">Reset</b-button>
           </b-form>
         </b-modal>
+
         <b-modal ref="deleteVMModal"
                  id="vm-delete-modal"
                  title="Delete virtual machine"

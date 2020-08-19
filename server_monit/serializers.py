@@ -27,6 +27,8 @@ class ListCPUSerializer(serializers.ModelSerializer):
 
 class ListStorageSerializer(serializers.ModelSerializer):
     """Сериализация списка количества cpu"""
+    type_storage = serializers.CharField(source='type_storage.__str__')
+    host = serializers.CharField(source='host.name')
 
     class Meta:
         model = StorageModel
@@ -70,7 +72,7 @@ class VMSerializer(serializers.ModelSerializer):
 
 class HostVMSerializer(serializers.ModelSerializer):
     """Сериализаия списка виртуальных машин на хосте"""
-    virtuals  = VMSerializer(read_only=True, many=True)
+    virtuals = VMSerializer(read_only=True, many=True)
 
     class Meta:
         model = HostModel
